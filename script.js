@@ -65,7 +65,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // 3. If logging is successful, proceed to payment
             const options = {
-                link: 'https://donate.donorfuse.com/CMYSeats', // IMPORTANT: Replace with your actual values
+                link: 'CMYSeats', // IMPORTANT: Replace with your actual values
                 campaign: 3370,             // IMPORTANT: Replace with your campaign ID
                 amount: totalAmount,
                 disableAmount: false,
