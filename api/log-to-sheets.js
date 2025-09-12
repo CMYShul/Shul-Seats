@@ -1,31 +1,32 @@
 const { GoogleSpreadsheet } = require('google-spreadsheet');
-const { JWT } = require('google-auth-library');
 
-// This function is the main handler for the serverless function.
+// NOTE: We no longer need to import { JWT } from 'google-auth-library'
+// The google-spreadsheet library v3.3.0 handles this for us.
+
 module.exports = async (req, res) => {
-    // Only allow POST requests
     if (req.method !== 'POST') {
         return res.status(405).json({ message: 'Only POST requests are allowed' });
     }
 
     try {
-        // Initialize the authentication object
-        const serviceAccountAuth = new JWT({
-            email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
-            key: process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, '\n'), // Vercel needs this replacement
-            scopes: ['https://www.googleapis.com/auth/spreadsheets'],
-        });
-
         // Initialize the Google Spreadsheet document
-        const doc = new GoogleSpreadsheet(process.env.GOOGLE_SHEET_ID, serviceAccountAuth);
+        const doc = new GoogleSpreadsheet(process.env.GOOGLE_SHEET_ID);
 
-        await doc.loadInfo(); // Loads document properties and worksheets
+        // --- THIS BLOCK IS THE FIX ---
+        // We now use the `useServiceAccountAuth` method to authenticate.
+        // This is the correct syntax for google-spreadsheet v3.3.0.
+        await doc.useServiceAccountAuth({
+            client_email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
+            // The private_key needs the .replace() for Vercel's environment variables
+            private_key: process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, '\n'),
+        });
+        // --- END OF FIX ---
+
+        await doc.loadInfo(); // This will now work because auth is initialized.
         const sheet = doc.sheetsByIndex[0]; // Or use doc.sheetsByTitle['YourSheetName']
 
-        // The data sent from the form
         const newRow = req.body;
         
-        // Add the new row to the sheet
         await sheet.addRow(newRow);
 
         res.status(200).json({ message: 'Success' });
