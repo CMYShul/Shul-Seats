@@ -78,20 +78,42 @@ input[type="number"] {
     margin-top: 20px;
 }
 
-.donate-button {
-    display: block;
-    width: 100%;
-    padding: 15px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    font-size: 1.2em;
-    cursor: pointer;
+./* ... (all your existing styles) ... */
+
+/* --- NEW STYLES FOR BUTTONS --- */
+
+.button-group {
+    display: flex; /* Aligns buttons in a row */
+    gap: 10px; /* Adds space between the buttons */
     margin-top: 20px;
+}
+
+/* Make both buttons fill the available space */
+.button-group > button {
+    flex: 1; /* Each button takes up equal space */
+    padding: 15px;
+    font-size: 1.2em;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
     transition: background-color 0.3s;
 }
 
+/* Keep the original style for the main payment button */
+.donate-button {
+    background-color: #007bff;
+    color: white;
+}
 .donate-button:hover {
     background-color: #0056b3;
+}
+
+/* Style for the new "Clear All" button */
+.clear-button {
+    background-color: #f8f9fa; /* A light grey background */
+    color: #555; /* Dark text color */
+    border: 1px solid #ccc; /* A subtle border */
+}
+.clear-button:hover {
+    background-color: #e2e6ea; /* A slightly darker grey on hover */
 }
