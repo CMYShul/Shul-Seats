@@ -54,8 +54,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // 3. Proceed to payment with new prefill data
             const options = {
-                link: 'your-donation-link', // IMPORTANT: Replace with your actual values
-                campaign: 123,             // IMPORTANT: Replace with your campaign ID
+                link: 'CMYSeats', // IMPORTANT: Replace with your actual values
+                campaign: 3370,             // IMPORTANT: Replace with your campaign ID
                 amount: totalAmount,
                 disableAmount: false,
                 firstName: formData.FirstName,
