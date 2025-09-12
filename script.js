@@ -2,6 +2,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('seat-form');
     const totalPriceElement = document.getElementById('total-price');
     const seatInputs = form.querySelectorAll('input[type="number"][data-price]');
+    
+    // --- NEW: Get the Clear All button ---
+    const clearButton = document.getElementById('clear-button');
 
     function calculateTotal() {
         let total = 0;
@@ -11,8 +14,17 @@ document.addEventListener('DOMContentLoaded', () => {
         totalPriceElement.textContent = total.toFixed(2);
     }
 
-    form.addEventListener('input', calculateTotal);
+    // --- NEW: Add a click listener for the Clear All button ---
+    clearButton.addEventListener('click', () => {
+        // Use the built-in form reset() method, which is the most efficient way
+        form.reset();
+        
+        // Manually trigger a recalculation to update the total display to $0.00
+        calculateTotal();
+    });
 
+    // --- Existing event listeners remain the same ---
+    form.addEventListener('input', calculateTotal);
     form.addEventListener('submit', async (event) => {
         event.preventDefault();
         const totalAmount = parseFloat(totalPriceElement.textContent);
@@ -21,15 +33,12 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        // 1. Collect all form data, including new fields
         const formData = {
             Timestamp: new Date().toISOString(),
             FirstName: document.getElementById('firstName').value,
             LastName: document.getElementById('lastName').value,
-            // --- NEW ---
             Email: document.getElementById('email').value,
             Phone: document.getElementById('phone').value,
-            // --- END NEW ---
             Comments: document.getElementById('comments').value,
             RegularMen: document.getElementById('regular-men').value,
             RegularBucherim: document.getElementById('regular-bucherim').value,
@@ -52,18 +61,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
             console.log('Successfully logged to Google Sheet.');
 
-            // 3. Proceed to payment with new prefill data
             const options = {
-                link: 'CMYSeats', // IMPORTANT: Replace with your actual values
-                campaign: 3370,             // IMPORTANT: Replace with your campaign ID
+                link: 'your-donation-link', // IMPORTANT: Replace with your actual values
+                campaign: 123,             // IMPORTANT: Replace with your campaign ID
                 amount: totalAmount,
                 disableAmount: false,
                 firstName: formData.FirstName,
                 lastName: formData.LastName,
-                // --- NEW ---
                 email: formData.Email,
                 phone: formData.Phone,
-                // --- END NEW ---
                 message: formData.Comments
             };
 
