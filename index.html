@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shul Seats 5785</title>
+    <link rel="stylesheet" href="style.css">
+    
+    <!-- 1. Donor Fuse Embed Script (as per documentation) -->
+    <script src="https://donate.donorfuse.com/assets/embed.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Shul Seat Reservation 5785</h1>
+        <form id="seat-form">
+            <div class="form-section">
+                <h3>Contact Information</h3>
+                <div class="name-fields">
+                    <div>
+                        <label for="firstName">First Name:</label>
+                        <input type="text" id="firstName" name="firstName" required>
+                    </div>
+                    <div>
+                        <label for="lastName">Last Name:</label>
+                        <input type="text" id="lastName" name="lastName" required>
+                    </div>
+                </div>
+
+                <label for="comments">Comments:</label>
+                <textarea id="comments" name="comments" rows="3"></textarea>
+            </div>
+
+            <div class="form-section">
+                <h3>Select Seats</h3>
+                <!-- Data attributes are used to store the price of each seat type -->
+                <div class="seat-row">
+                    <label for="regular-men">Regular Men ($325)</label>
+                    <input type="number" id="regular-men" name="regular-men" min="0" value="0" data-price="325">
+                </div>
+                <div class="seat-row">
+                    <label for="regular-bucherim">Regular Bucherim ($200)</label>
+                    <input type="number" id="regular-bucherim" name="regular-bucherim" min="0" value="0" data-price="200">
+                </div>
+                <div class="seat-row">
+                    <label for="klei-kodesh">Klei Kodesh ($225)</label>
+                    <input type="number" id="klei-kodesh" name="klei-kodesh" min="0" value="0" data-price="225">
+                </div>
+                <div class="seat-row">
+                    <label for="klei-kodesh-bucherim">Klei Kodesh Bucherim ($150)</label>
+                    <input type="number" id="klei-kodesh-bucherim" name="klei-kodesh-bucherim" min="0" value="0" data-price="150">
+                </div>
+                <div class="seat-row">
+                    <label for="ladies">Ladies ($250)</label>
+                    <input type="number" id="ladies" name="ladies" min="0" value="0" data-price="250">
+                </div>
+                <div class="seat-row">
+                    <label for="girls">Girls ($200)</label>
+                    <input type="number" id="girls" name="girls" min="0" value="0" data-price="200">
+                </div>
+                <div class="seat-row">
+                    <label for="ladies-klei-kodesh">Ladies Klei Kodesh ($175)</label>
+                    <input type="number" id="ladies-klei-kodesh" name="ladies-klei-kodesh" min="0" value="0" data-price="175">
+                </div>
+                <div class="seat-row">
+                    <label for="girls-klei-kodesh">Girls Klei Kodesh ($125)</label>
+                    <input type="number" id="girls-klei-kodesh" name="girls-klei-kodesh" min="0" value="0" data-price="125">
+                </div>
+            </div>
+            
+            <div class="total-section">
+                <h2>Total: $<span id="total-price">0.00</span></h2>
+            </div>
+            
+            <!-- This button will trigger the Donor Fuse popup -->
+            <button type="submit" class="donate-button">Proceed to Payment</button>
+        </form>
+    </div>
+
+    <!-- Your custom script for calculation and integration -->
+    <script src="script.js"></script>
+</body>
+</html>
