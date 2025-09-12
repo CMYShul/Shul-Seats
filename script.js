@@ -1,37 +1,93 @@
-const { GoogleSpreadsheet } = require('google-spreadsheet');
+document.addEventListener('DOMContentLoaded', () => {
+    const form = document.getElementById('seat-form');
+    const totalPriceElement = document.getElementById('total-price');
 
-// NOTE: We no longer need to import { JWT } from 'google-auth-library'
-// The google-spreadsheet library v3.3.0 handles this for us.
+    // Select all number inputs that have a 'data-price' attribute
+    const seatInputs = form.querySelectorAll('input[type="number"][data-price]');
 
-module.exports = async (req, res) => {
-    if (req.method !== 'POST') {
-        return res.status(405).json({ message: 'Only POST requests are allowed' });
-    }
-
-    try {
-        // Initialize the Google Spreadsheet document
-        const doc = new GoogleSpreadsheet(process.env.GOOGLE_SHEET_ID);
-
-        // --- THIS BLOCK IS THE FIX ---
-        // We now use the `useServiceAccountAuth` method to authenticate.
-        // This is the correct syntax for google-spreadsheet v3.3.0.
-        await doc.useServiceAccountAuth({
-            client_email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
-            // The private_key needs the .replace() for Vercel's environment variables
-            private_key: process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, '\n'),
+    function calculateTotal() {
+        let total = 0;
+        seatInputs.forEach(input => {
+            const quantity = parseInt(input.value) || 0;
+            const price = parseFloat(input.dataset.price);
+            total += quantity * price;
         });
-        // --- END OF FIX ---
-
-        await doc.loadInfo(); // This will now work because auth is initialized.
-        const sheet = doc.sheetsByIndex[0]; // Or use doc.sheetsByTitle['YourSheetName']
-
-        const newRow = req.body;
         
-        await sheet.addRow(newRow);
-
-        res.status(200).json({ message: 'Success' });
-    } catch (error) {
-        console.error('Error:', error);
-        res.status(500).json({ message: 'Something went wrong.' });
+        // Format to two decimal places
+        totalPriceElement.textContent = total.toFixed(2);
     }
-};
+
+    // Calculate total whenever any seat quantity changes
+    form.addEventListener('input', calculateTotal);
+
+    // Make the submit handler async to wait for the sheet logging
+    form.addEventListener('submit', async (event) => {
+        event.preventDefault();
+
+        const totalAmount = parseFloat(totalPriceElement.textContent);
+        if (totalAmount <= 0) {
+            alert('Please select at least one seat before proceeding to payment.');
+            return;
+        }
+
+        // 1. Collect all form data into an object
+        const formData = {
+            Timestamp: new Date().toISOString(),
+            FirstName: document.getElementById('firstName').value,
+            LastName: document.getElementById('lastName').value,
+            Comments: document.getElementById('comments').value,
+            RegularMen: document.getElementById('regular-men').value,
+            RegularBucherim: document.getElementById('regular-bucherim').value,
+            KleiKodesh: document.getElementById('klei-kodesh').value,
+            KleiKodeshBucherim: document.getElementById('klei-kodesh-bucherim').value,
+            Ladies: document.getElementById('ladies').value,
+            Girls: document.getElementById('girls').value,
+            LadiesKleiKodesh: document.getElementById('ladies-klei-kodesh').value,
+            GirlsKleiKodesh: document.getElementById('girls-klei-kodesh').value,
+            Total: totalAmount.toFixed(2)
+        };
+
+        try {
+            // 2. Send the data to your serverless function
+            const response = await fetch('/api/log-to-sheets', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData),
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to log to sheet.');
+            }
+
+            console.log('Successfully logged to Google Sheet.');
+
+            // 3. If logging is successful, proceed to payment
+            const options = {
+                link: 'your-donation-link', // IMPORTANT: Replace with your actual values
+                campaign: 123,             // IMPORTANT: Replace with your campaign ID
+                amount: totalAmount,
+                disableAmount: false,
+                firstName: formData.FirstName,
+                lastName: formData.LastName,
+                message: formData.Comments
+            };
+
+            DonorFuseClient.ShowPopup(options, function(success) {
+                if (success) {
+                    console.log('Donation completed successfully!');
+                } else {
+                    console.log('Donation was cancelled or failed.');
+                }
+            });
+
+        } catch (error) {
+            console.error('Submission Error:', error);
+            alert('There was an error submitting your request. Please try again.');
+        }
+    });
+
+    // Initial calculation on page load
+    calculateTotal();
+});
