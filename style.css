@@ -78,42 +78,36 @@ input[type="number"] {
     margin-top: 20px;
 }
 
-./* ... (all your existing styles) ... */
-
-/* --- NEW STYLES FOR BUTTONS --- */
-
-.button-group {
-    display: flex; /* Aligns buttons in a row */
-    gap: 10px; /* Adds space between the buttons */
-    margin-top: 20px;
-}
-
-/* Make both buttons fill the available space */
-.button-group > button {
-    flex: 1; /* Each button takes up equal space */
-    padding: 15px;
-    font-size: 1.2em;
-    border-radius: 5px;
-    border: none;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-/* Keep the original style for the main payment button */
 .donate-button {
+    display: block;
+    width: 100%;
+    padding: 15px;
     background-color: #007bff;
     color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 1.2em;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: background-color 0.3s;
 }
 .donate-button:hover {
     background-color: #0056b3;
 }
 
-/* Style for the new "Clear All" button */
-.clear-button {
-    background-color: #f8f9fa; /* A light grey background */
-    color: #555; /* Dark text color */
-    border: 1px solid #ccc; /* A subtle border */
+
+/* --- ADD THIS NEW STYLE for the top Clear All button --- */
+.clear-button-top {
+    float: right; /* Positions the button to the top right */
+    background: none;
+    border: none;
+    color: #007bff; /* Makes it look like a link */
+    cursor: pointer;
+    padding: 0;
+    font-size: 0.9em;
+    margin-top: -15px; /* Adjust as needed to align nicely */
+    margin-bottom: 10px;
 }
-.clear-button:hover {
-    background-color: #e2e6ea; /* A slightly darker grey on hover */
+.clear-button-top:hover {
+    text-decoration: underline;
 }
