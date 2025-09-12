@@ -3,15 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shul Seats 5786</title>
+    <title>CMY Shul Seats 5786</title>
     <link rel="stylesheet" href="style.css">
     
-    <!-- 1. Donor Fuse Embed Script (as per documentation) -->
+    <!-- Donor Fuse Embed Script -->
     <script src="https://donate.donorfuse.com/assets/embed.js"></script>
 </head>
 <body>
     <div class="container">
-        <h1>Shul Seat Reservation 5786</h1>
+        <h1>בית מדרש מנחת יהודא סטיטשין</h1>
+        <h1>Shul Seats 5786</h1>
         <form id="seat-form">
             <div class="form-section">
                 <h3>Contact Information</h3>
@@ -26,13 +27,21 @@
                     </div>
                 </div>
 
+                <!-- NEW FIELDS START HERE -->
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
+
+                <label for="phone">Phone:</label>
+                <input type="tel" id="phone" name="phone">
+                <!-- NEW FIELDS END HERE -->
+
                 <label for="comments">Comments:</label>
                 <textarea id="comments" name="comments" rows="3"></textarea>
             </div>
 
             <div class="form-section">
                 <h3>Select Seats</h3>
-                <!-- Data attributes are used to store the price of each seat type -->
+                <!-- Seat selection rows remain unchanged -->
                 <div class="seat-row">
                     <label for="regular-men">Regular Men ($325)</label>
                     <input type="number" id="regular-men" name="regular-men" min="0" value="0" data-price="325">
@@ -71,12 +80,10 @@
                 <h2>Total: $<span id="total-price">0.00</span></h2>
             </div>
             
-            <!-- This button will trigger the Donor Fuse popup -->
-            <button type="submit" class="donate-button">Proceed to Payment</button>
+            <button type="submit" class="donate-button">Record your Info and Proceed to Payment</button>
         </form>
     </div>
 
-    <!-- Your custom script for calculation and integration -->
     <script src="script.js"></script>
 </body>
 </html>

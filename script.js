@@ -1,40 +1,35 @@
 document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('seat-form');
     const totalPriceElement = document.getElementById('total-price');
-
-    // Select all number inputs that have a 'data-price' attribute
     const seatInputs = form.querySelectorAll('input[type="number"][data-price]');
 
     function calculateTotal() {
         let total = 0;
         seatInputs.forEach(input => {
-            const quantity = parseInt(input.value) || 0;
-            const price = parseFloat(input.dataset.price);
-            total += quantity * price;
+            total += (parseInt(input.value) || 0) * parseFloat(input.dataset.price);
         });
-        
-        // Format to two decimal places
         totalPriceElement.textContent = total.toFixed(2);
     }
 
-    // Calculate total whenever any seat quantity changes
     form.addEventListener('input', calculateTotal);
 
-    // Make the submit handler async to wait for the sheet logging
     form.addEventListener('submit', async (event) => {
         event.preventDefault();
-
         const totalAmount = parseFloat(totalPriceElement.textContent);
         if (totalAmount <= 0) {
-            alert('Please select at least one seat before proceeding to payment.');
+            alert('Please select at least one seat.');
             return;
         }
 
-        // 1. Collect all form data into an object
+        // 1. Collect all form data, including new fields
         const formData = {
             Timestamp: new Date().toISOString(),
             FirstName: document.getElementById('firstName').value,
             LastName: document.getElementById('lastName').value,
+            // --- NEW ---
+            Email: document.getElementById('email').value,
+            Phone: document.getElementById('phone').value,
+            // --- END NEW ---
             Comments: document.getElementById('comments').value,
             RegularMen: document.getElementById('regular-men').value,
             RegularBucherim: document.getElementById('regular-bucherim').value,
@@ -48,38 +43,33 @@ document.addEventListener('DOMContentLoaded', () => {
         };
 
         try {
-            // 2. Send the data to your serverless function
             const response = await fetch('/api/log-to-sheets', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(formData),
             });
-
-            if (!response.ok) {
-                throw new Error('Failed to log to sheet.');
-            }
+            if (!response.ok) throw new Error('Failed to log to sheet.');
 
             console.log('Successfully logged to Google Sheet.');
 
-            // 3. If logging is successful, proceed to payment
+            // 3. Proceed to payment with new prefill data
             const options = {
-                link: 'CMYSeats', // IMPORTANT: Replace with your actual values
-                campaign: 3370,             // IMPORTANT: Replace with your campaign ID
+                link: 'your-donation-link', // IMPORTANT: Replace with your actual values
+                campaign: 123,             // IMPORTANT: Replace with your campaign ID
                 amount: totalAmount,
                 disableAmount: false,
                 firstName: formData.FirstName,
                 lastName: formData.LastName,
+                // --- NEW ---
+                email: formData.Email,
+                phone: formData.Phone,
+                // --- END NEW ---
                 message: formData.Comments
             };
 
             DonorFuseClient.ShowPopup(options, function(success) {
-                if (success) {
-                    console.log('Donation completed successfully!');
-                } else {
-                    console.log('Donation was cancelled or failed.');
-                }
+                if (success) console.log('Donation completed successfully!');
+                else console.log('Donation was cancelled or failed.');
             });
 
         } catch (error) {
@@ -88,6 +78,5 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Initial calculation on page load
     calculateTotal();
 });
