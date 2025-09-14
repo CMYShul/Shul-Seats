@@ -24,7 +24,6 @@ h1, h3 {
     padding-bottom: 20px;
 }
 
-/* New style for side-by-side name fields */
 .name-fields {
     display: flex;
     gap: 20px;
@@ -95,19 +94,49 @@ input[type="number"] {
     background-color: #0056b3;
 }
 
-
-/* --- ADD THIS NEW STYLE for the top Clear All button --- */
 .clear-button-top {
-    float: right; /* Positions the button to the top right */
+    float: right; 
     background: none;
     border: none;
-    color: #007bff; /* Makes it look like a link */
+    color: #007bff; 
     cursor: pointer;
     padding: 0;
     font-size: 0.9em;
-    margin-top: -15px; /* Adjust as needed to align nicely */
+    margin-top: -15px;
     margin-bottom: 10px;
 }
 .clear-button-top:hover {
     text-decoration: underline;
+}
+.email-copy-section {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; 
+    padding: 15px;
+    background-color: #f8f9fa; 
+    border: 1px solid #e9ecef;
+    border-radius: 5px;
+}
+
+.email-copy-section p {
+    margin: 0; 
+    color: #555;
+}
+
+.copy-button {
+    padding: 8px 12px;
+    font-size: 0.9em;
+    background-color: #6c757d; 
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.copy-button:hover {
+    background-color: #5a6268;
+}
+.copy-button.copied {
+    background-color: #28a745;
 }
