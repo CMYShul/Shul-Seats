@@ -32,14 +32,15 @@
 
                 <label for="phone">* Phone:</label>
                 <input type="tel" id="phone" name="phone" required>
-                     <div>All * fields are required. Please add comments in the below box.</div>
+                     <div>
+                         <div>>All * fields are required. Please add comments in the below box.</div>
+                     </div>
                 <label for="comments">Comments:</label>
                 <textarea id="comments" name="comments" rows="3"></textarea>
             </div>
 
             <div class="form-section">
                 <h3>Select Seats</h3>
-                <!-- Seat selection rows remain unchanged -->
                 <div class="seat-row">
                     <label for="regular-men">Regular Men ($350)</label>
                     <input type="number" id="regular-men" name="regular-men" min="0" value="0" data-price="350">
@@ -77,7 +78,12 @@
 <div class="total-section">
                 <h2>Total: $<span id="total-price">0.00</span></h2>
             </div>
-    
+                            <div class="form-section email-copy-section">
+                <p>For Zelle, please press the button below to record the info, and send a Zelle to: <strong id="email-display">[email protected]</strong></p>
+                <button type="button" id="copy-email-button" class="copy-button">Copy Zelle Email</button>
+                <p>You can close the payment popup, your seats selection will be pending until the Zelle is received.</p>
+                <p>Please enter "Seats 5786" in the Zelle memo field</p>
+            </div>
                 <button type="submit" class="donate-button">Record the info and Proceed to Payment</button>
             </div>
         </form>
