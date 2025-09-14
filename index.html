@@ -19,22 +19,20 @@
                 <div class="name-fields">
                     <div>
                         <label for="firstName">First Name:</label>
-                        <input type="text" id="firstName" name="firstName">
+                        <input type="text" id="firstName" name="* firstName" reguired>
                     </div>
                     <div>
                         <label for="lastName">Last Name:</label>
-                        <input type="text" id="lastName" name="lastName" required>
+                        <input type="text" id="lastName" name="* lastName" required>
                     </div>
                 </div>
 
-                <!-- NEW FIELDS START HERE -->
-                <label for="email">Email:</label>
-                <input type="email" id="email" name="email">
+                <label for="email">* Email:</label>
+                <input type="email" id="email" name="email" required>
 
-                <label for="phone">Phone:</label>
-                <input type="tel" id="phone" name="phone">
-                <!-- NEW FIELDS END HERE -->
-
+                <label for="phone">* Phone:</label>
+                <input type="tel" id="phone" name="phone" required>
+                     <h3>All * fields are required. Please add comments in the below box.</h3>
                 <label for="comments">Comments:</label>
                 <textarea id="comments" name="comments" rows="3"></textarea>
             </div>
