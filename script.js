@@ -3,7 +3,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const totalPriceElement = document.getElementById('total-price');
     const seatInputs = form.querySelectorAll('input[type="number"][data-price]');
     
-    // --- NEW: Get the Clear All button ---
     const clearButton = document.getElementById('clear-button');
 
     function calculateTotal() {
@@ -14,16 +13,13 @@ document.addEventListener('DOMContentLoaded', () => {
         totalPriceElement.textContent = total.toFixed(2);
     }
 
-    // --- NEW: Add a click listener for the Clear All button ---
     clearButton.addEventListener('click', () => {
-        // Use the built-in form reset() method, which is the most efficient way
+  
         form.reset();
         
-        // Manually trigger a recalculation to update the total display to $0.00
         calculateTotal();
     });
 
-    // --- Existing event listeners remain the same ---
     form.addEventListener('input', calculateTotal);
     form.addEventListener('submit', async (event) => {
         event.preventDefault();
@@ -62,8 +58,8 @@ document.addEventListener('DOMContentLoaded', () => {
             console.log('Successfully logged to Google Sheet.');
 
             const options = {
-                link: 'CMYSeats', // IMPORTANT: Replace with your actual values
-                campaign: 3370,             // IMPORTANT: Replace with your campaign ID
+                link: 'CMYSeats', 
+                campaign: 3370,            
                 amount: totalAmount,
                 disableAmount: false,
                 firstName: formData.FirstName,
@@ -86,3 +82,31 @@ document.addEventListener('DOMContentLoaded', () => {
 
     calculateTotal();
 });
+    const emailDisplay = document.getElementById('email-display');
+    const copyEmailButton = document.getElementById('copy-email-button');
+
+ 
+    const user = 'cmyshul';
+    const domain = 'gmail.com'; 
+    const fullEmail = `${user}@${domain}`;
+
+
+    emailDisplay.textContent = fullEmail;
+
+    copyEmailButton.addEventListener('click', () => {
+        navigator.clipboard.writeText(fullEmail).then(() => {
+      
+            const originalText = copyEmailButton.textContent;
+            copyEmailButton.textContent = 'Copied!';
+            copyEmailButton.classList.add('copied');
+
+    
+            setTimeout(() => {
+                copyEmailButton.textContent = originalText;
+                copyEmailButton.classList.remove('copied');
+            }, 2000);
+        }).catch(err => {
+            console.error('Failed to copy email: ', err);
+            alert('Failed to copy email. Please copy it manually.');
+        });
+    });
