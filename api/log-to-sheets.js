@@ -1,5 +1,4 @@
 const { GoogleSpreadsheet } = require('google-spreadsheet');
-// Import 'createPool' from the Vercel Postgres SDK
 const { createPool } = require('@vercel/postgres');
 
 module.exports = async (req, res) => {
@@ -19,10 +18,10 @@ module.exports = async (req, res) => {
         await sheet.addRow(req.body);
     };
 
-    // --- Task 2: Log to Vercel Postgres Failsafe (Updated) ---
+    // --- Task 2: Log to Vercel Postgres Failsafe (Corrected) ---
     const logToPostgres = async () => {
-        // Explicitly create a connection pool using your project's prefixed URL.
-        // This is the key to the solution.
+        // NOTE: We still create the pool, but we will NOT call pool.end()
+        // Vercel's environment will manage the connection lifecycle.
         const pool = createPool({
             connectionString: process.env.CMY_POSTGRES_URL,
         });
@@ -33,7 +32,6 @@ module.exports = async (req, res) => {
             Ladies, Girls, LadiesKleiKodesh, GirlsKleiKodesh, Total
         } = req.body;
 
-        // Use the new 'pool' object to execute the SQL command
         await pool.sql`
             INSERT INTO submissions (
                 firstName, lastName, email, phone, comments,
@@ -45,12 +43,9 @@ module.exports = async (req, res) => {
                 ${Ladies}, ${Girls}, ${LadiesKleiKodesh}, ${GirlsKleiKodesh}, ${Total}
             );
         `;
-
-        // IMPORTANT: End the pool to close the connection after the query.
-        await pool.end();
     };
 
-    // --- Main Logic: Try both logging tasks (this part is unchanged) ---
+    // --- Main Logic (unchanged) ---
     try {
         const results = await Promise.allSettled([
             logToGoogleSheets(),
