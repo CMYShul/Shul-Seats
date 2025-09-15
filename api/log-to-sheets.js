@@ -1,12 +1,13 @@
 const { GoogleSpreadsheet } = require('google-spreadsheet');
-const { sql } = require('@vercel/postgres'); // <-- Import the Vercel Postgres SDK
+// Import 'createPool' from the Vercel Postgres SDK
+const { createPool } = require('@vercel/postgres');
 
 module.exports = async (req, res) => {
     if (req.method !== 'POST') {
         return res.status(405).json({ message: 'Only POST requests are allowed' });
     }
 
-    // --- Task 1: Log to Google Sheets (remains the same) ---
+    // --- Task 1: Log to Google Sheets (this function is unchanged) ---
     const logToGoogleSheets = async () => {
         const doc = new GoogleSpreadsheet(process.env.GOOGLE_SHEET_ID);
         await doc.useServiceAccountAuth({
@@ -18,16 +19,22 @@ module.exports = async (req, res) => {
         await sheet.addRow(req.body);
     };
 
-    // --- Task 2: Log to Vercel Postgres Failsafe ---
+    // --- Task 2: Log to Vercel Postgres Failsafe (Updated) ---
     const logToPostgres = async () => {
+        // Explicitly create a connection pool using your project's prefixed URL.
+        // This is the key to the solution.
+        const pool = createPool({
+            connectionString: process.env.CMY_POSTGRES_URL,
+        });
+
         const {
             FirstName, LastName, Email, Phone, Comments,
             RegularMen, RegularBucherim, KleiKodesh, KleiKodeshBucherim,
             Ladies, Girls, LadiesKleiKodesh, GirlsKleiKodesh, Total
         } = req.body;
 
-        // Use the 'sql' template literal to safely insert data
-        await sql`
+        // Use the new 'pool' object to execute the SQL command
+        await pool.sql`
             INSERT INTO submissions (
                 firstName, lastName, email, phone, comments,
                 regularMen, regularBucherim, kleiKodesh, kleiKodeshBucherim,
@@ -38,9 +45,12 @@ module.exports = async (req, res) => {
                 ${Ladies}, ${Girls}, ${LadiesKleiKodesh}, ${GirlsKleiKodesh}, ${Total}
             );
         `;
+
+        // IMPORTANT: End the pool to close the connection after the query.
+        await pool.end();
     };
 
-    // --- Main Logic: Try both logging tasks ---
+    // --- Main Logic: Try both logging tasks (this part is unchanged) ---
     try {
         const results = await Promise.allSettled([
             logToGoogleSheets(),
