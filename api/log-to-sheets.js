@@ -1,12 +1,12 @@
 const { GoogleSpreadsheet } = require('google-spreadsheet');
-const { createPool } = require('@vercel/postgres');
+const { sql } = require('@vercel/postgres'); // <-- Import the Vercel Postgres SDK
 
 module.exports = async (req, res) => {
     if (req.method !== 'POST') {
         return res.status(405).json({ message: 'Only POST requests are allowed' });
     }
 
-    // --- Task 1: Log to Google Sheets (this function is unchanged) ---
+    // --- Task 1: Log to Google Sheets (remains the same) ---
     const logToGoogleSheets = async () => {
         const doc = new GoogleSpreadsheet(process.env.GOOGLE_SHEET_ID);
         await doc.useServiceAccountAuth({
@@ -18,21 +18,16 @@ module.exports = async (req, res) => {
         await sheet.addRow(req.body);
     };
 
-    // --- Task 2: Log to Vercel Postgres Failsafe (Corrected) ---
+    // --- Task 2: Log to Vercel Postgres Failsafe ---
     const logToPostgres = async () => {
-        // NOTE: We still create the pool, but we will NOT call pool.end()
-        // Vercel's environment will manage the connection lifecycle.
-        const pool = createPool({
-            connectionString: process.env.CMY_POSTGRES_URL,
-        });
-
         const {
             FirstName, LastName, Email, Phone, Comments,
             RegularMen, RegularBucherim, KleiKodesh, KleiKodeshBucherim,
             Ladies, Girls, LadiesKleiKodesh, GirlsKleiKodesh, Total
         } = req.body;
 
-        await pool.sql`
+        // Use the 'sql' template literal to safely insert data
+        await sql`
             INSERT INTO submissions (
                 firstName, lastName, email, phone, comments,
                 regularMen, regularBucherim, kleiKodesh, kleiKodeshBucherim,
@@ -45,7 +40,7 @@ module.exports = async (req, res) => {
         `;
     };
 
-    // --- Main Logic (unchanged) ---
+    // --- Main Logic: Try both logging tasks ---
     try {
         const results = await Promise.allSettled([
             logToGoogleSheets(),
