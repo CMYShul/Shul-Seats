@@ -32,7 +32,7 @@ module.exports = async (req, res) => {
         const payload = {
             ...req.body, // Include all the original form data
             access_key: process.env.WEB3FORMS_ACCESS_KEY,
-            subject: 'New Shul Seat Submission (Failsafe)', // Optional: customize the email subject
+            subject: 'New Shul Seat Request', // Optional: customize the email subject
         };
 
         // Send the data to Web3Forms
