@@ -82,7 +82,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
     calculateTotal();
 });
-const el = document.getElementById('b64');
-  const decoded = atob(el.getAttribute('data-b64')); // atob decodes base64
-  el.textContent = decoded;
+
+document.addEventListener('DOMContentLoaded', function () {
+  const el = document.getElementById('b64');
+  if (!el) return;
+
+  const b64 = el.getAttribute('data-b64') || '';
+  try {
+    const decoded = atob(b64);
+    el.textContent = decoded;
+  } catch (err) {
+    console.error('Base64 decode failed', err);
+  }
 });
