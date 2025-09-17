@@ -82,3 +82,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     calculateTotal();
 });
+const el = document.getElementById('b64');
+  const decoded = atob(el.getAttribute('data-b64')); // atob decodes base64
+  el.textContent = decoded;
+});
