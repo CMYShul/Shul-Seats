@@ -82,31 +82,3 @@ document.addEventListener('DOMContentLoaded', () => {
 
     calculateTotal();
 });
-    const emailDisplay = document.getElementById('email-display');
-    const copyEmailButton = document.getElementById('copy-email-button');
-
- 
-    const user = 'cmyshul';
-    const domain = 'gmail.com'; 
-    const fullEmail = `${user}@${domain}`;
-
-
-    emailDisplay.textContent = fullEmail;
-
-    copyEmailButton.addEventListener('click', () => {
-        navigator.clipboard.writeText(fullEmail).then(() => {
-      
-            const originalText = copyEmailButton.textContent;
-            copyEmailButton.textContent = 'Copied!';
-            copyEmailButton.classList.add('copied');
-
-    
-            setTimeout(() => {
-                copyEmailButton.textContent = originalText;
-                copyEmailButton.classList.remove('copied');
-            }, 2000);
-        }).catch(err => {
-            console.error('Failed to copy email: ', err);
-            alert('Failed to copy email. Please copy it manually.');
-        });
-    });
