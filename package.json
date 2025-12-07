@@ -11,6 +11,6 @@
   "description": "",
   "dependencies": {
     "@vercel/postgres": "^0.10.0",
-    "google-spreadsheet": "3.3.0"
+    "google-spreadsheet": "5.0.2"
   }
 }
