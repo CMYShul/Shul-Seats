@@ -114,29 +114,38 @@ module.exports = async (req, res) => {
         await sheet.addRow(bodyToRowArray(body));
     };
 
-    // --- Task 2: A function to handle logging to the Web3Forms failsafe ---
+    // --- Task 2: Web3Forms failsafe (email notification)
+    // Note: Web3Forms recommends client-side use. Server-side requires paid plan + IP whitelisting.
     const logToFailsafe = async () => {
-        // Check if the WEB3FORMS_ACCESS_KEY is configured in Vercel
         if (!process.env.WEB3FORMS_ACCESS_KEY) {
             console.log('Web3Forms access key not configured. Skipping failsafe.');
             return;
         }
 
         const payload = {
-            ...body,
             access_key: process.env.WEB3FORMS_ACCESS_KEY,
             subject: 'New Shul Seat Request',
+            email: body.Email || '',
+            from_name: [body.FirstName, body.LastName].filter(Boolean).join(' ') || 'Shul Seats',
+            ...body,
         };
 
-        // Send the data to Web3Forms
-        await fetch("https://api.web3forms.com/submit", {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
-            },
-            body: JSON.stringify(payload),
-        });
+        try {
+            const wRes = await fetch('https://api.web3forms.com/submit', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                },
+                body: JSON.stringify(payload),
+            });
+            const wData = await wRes.json().catch(() => ({}));
+            if (!wRes.ok || wData.success === false) {
+                console.warn('Web3Forms failsafe failed:', wRes.status, wData.message || wData);
+            }
+        } catch (e) {
+            console.warn('Web3Forms request error:', e?.message || e);
+        }
     };
 
 

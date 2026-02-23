@@ -62,6 +62,26 @@ document.addEventListener('DOMContentLoaded', () => {
 
             console.log('Successfully logged to Google Sheet.');
 
+            // Web3Forms email backup (client-side so it works without server IP whitelisting)
+            fetch('/api/web3forms-key')
+                .then((r) => r.json())
+                .then(({ access_key }) => {
+                    if (!access_key) return;
+                    return fetch('https://api.web3forms.com/submit', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                        body: JSON.stringify({
+                            access_key,
+                            subject: 'New Shul Seat Request',
+                            email: formData.Email,
+                            from_name: [formData.FirstName, formData.LastName].filter(Boolean).join(' ') || 'Shul Seats',
+                            ...formData,
+                        }),
+                    });
+                })
+                .then((r) => r && !r.ok && r.json().then((d) => console.warn('Web3Forms:', d.message || d)))
+                .catch((e) => console.warn('Web3Forms:', e?.message || e));
+
             const options = {
                 link: 'CMYSeats', 
                 campaign: 10491,            
