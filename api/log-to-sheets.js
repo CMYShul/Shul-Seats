@@ -56,11 +56,12 @@ function validateBody(body) {
     return { ok: true, data: row };
 }
 
-// Column order for appending (v5 addRow with array doesn't depend on sheet header names)
+// Column order must match your sheet header row exactly (left to right)
 const ROW_KEYS = [
-    'Timestamp', 'FirstName', 'LastName', 'Email', 'Phone', 'Comments',
+    'Timestamp', 'FirstName', 'LastName',
     'RegularMen', 'RegularBucherim', 'KleiKodesh', 'KleiKodeshBucherim',
-    'Ladies', 'Girls', 'LadiesKleiKodesh', 'GirlsKleiKodesh', 'Total'
+    'Ladies', 'Girls', 'LadiesKleiKodesh', 'GirlsKleiKodesh',
+    'Paid', 'Comments', 'Total', 'Email', 'Phone'
 ];
 
 function bodyToRowArray(body) {
