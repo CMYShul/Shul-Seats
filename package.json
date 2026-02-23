@@ -12,5 +12,9 @@
   "dependencies": {
     "@vercel/postgres": "^0.10.0",
     "google-spreadsheet": "3.3.0"
+  },
+  "overrides": {
+    "node-forge": ">=1.3.2",
+    "lodash": ">=4.17.23"
   }
 }
