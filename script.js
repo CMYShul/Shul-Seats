@@ -53,7 +53,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(formData),
             });
-            if (!response.ok) throw new Error('Failed to log to sheet.');
+            const data = await response.json().catch(() => ({}));
+            if (!response.ok) {
+                const msg = data.detail || data.message || 'Failed to log to sheet.';
+                console.error('API error:', response.status, data);
+                throw new Error(msg);
+            }
 
             console.log('Successfully logged to Google Sheet.');
 
@@ -76,7 +81,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         } catch (error) {
             console.error('Submission Error:', error);
-            alert('There was an error submitting your request. Please try again.');
+            const detail = error?.message || 'There was an error submitting your request. Please try again.';
+            alert(detail);
         }
     });
 

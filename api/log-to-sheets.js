@@ -56,12 +56,35 @@ function validateBody(body) {
     return { ok: true, data: row };
 }
 
+// Column order for appending (v5 addRow with array doesn't depend on sheet header names)
+const ROW_KEYS = [
+    'Timestamp', 'FirstName', 'LastName', 'Email', 'Phone', 'Comments',
+    'RegularMen', 'RegularBucherim', 'KleiKodesh', 'KleiKodeshBucherim',
+    'Ladies', 'Girls', 'LadiesKleiKodesh', 'GirlsKleiKodesh', 'Total'
+];
+
+function bodyToRowArray(body) {
+    return ROW_KEYS.map((k) => body[k] ?? '');
+}
+
 module.exports = async (req, res) => {
     if (req.method !== 'POST') {
         return res.status(405).json({ message: 'Only POST requests are allowed' });
     }
 
-    const validation = validateBody(req.body);
+    let parsedBody = req.body;
+    if (typeof parsedBody === 'string') {
+        try {
+            parsedBody = JSON.parse(parsedBody);
+        } catch (e) {
+            return res.status(400).json({ message: 'Invalid JSON body' });
+        }
+    }
+    if (!parsedBody || typeof parsedBody !== 'object') {
+        return res.status(400).json({ message: 'Missing or invalid request body' });
+    }
+
+    const validation = validateBody(parsedBody);
     if (!validation.ok) {
         return res.status(validation.status).json({ message: validation.message });
     }
@@ -86,7 +109,8 @@ module.exports = async (req, res) => {
         const doc = new GoogleSpreadsheet(sheetId, serviceAccountAuth);
         await doc.loadInfo();
         const sheet = doc.sheetsByIndex[0];
-        await sheet.addRow(body);
+        // Use array so we don't depend on sheet header names matching our keys
+        await sheet.addRow(bodyToRowArray(body));
     };
 
     // --- Task 2: A function to handle logging to the Web3Forms failsafe ---
@@ -128,14 +152,23 @@ module.exports = async (req, res) => {
         });
 
         if (results[0].status === 'rejected') {
-            console.error('CRITICAL: Google Sheets logging failed!', results[0].reason);
-            return res.status(500).json({ message: 'Failed to record your request. Please try again.' });
+            const err = results[0].reason;
+            console.error('CRITICAL: Google Sheets logging failed!', err);
+            const detail = err?.message || String(err);
+            return res.status(500).json({
+                message: 'Failed to record your request. Please try again.',
+                detail,
+            });
         }
 
         res.status(200).json({ message: 'Submission processed' });
 
     } catch (error) {
         console.error('A fatal error occurred during the submission process:', error);
-        res.status(500).json({ message: 'An unexpected error occurred.' });
+        const detail = error?.message || String(error);
+        return res.status(500).json({
+            message: 'An unexpected error occurred.',
+            detail,
+        });
     }
 };
