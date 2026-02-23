@@ -11,6 +11,7 @@
   "description": "",
   "dependencies": {
     "@vercel/postgres": "^0.10.0",
+    "google-auth-library": "^9.0.0",
     "google-spreadsheet": "^5.2.0"
   },
   "overrides": {
