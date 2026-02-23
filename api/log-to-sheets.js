@@ -1,23 +1,91 @@
 const { GoogleSpreadsheet } = require('google-spreadsheet');
 
+// Seat type keys and prices (must match client data-price and field names)
+const SEAT_PRICES = {
+    RegularMen: 350,
+    RegularBucherim: 200,
+    KleiKodesh: 225,
+    KleiKodeshBucherim: 130,
+    Ladies: 250,
+    Girls: 200,
+    LadiesKleiKodesh: 175,
+    GirlsKleiKodesh: 125,
+};
+
+const MAX_STRING_LENGTH = 500;
+const MAX_SEATS_PER_TYPE = 100;
+
+function parseNum(val, defaultVal = 0) {
+    const n = parseInt(val, 10);
+    return Number.isNaN(n) || n < 0 ? defaultVal : Math.min(n, MAX_SEATS_PER_TYPE);
+}
+
+function sanitizeString(val) {
+    if (val == null) return '';
+    const s = String(val).trim();
+    return s.length > MAX_STRING_LENGTH ? s.slice(0, MAX_STRING_LENGTH) : s;
+}
+
+/** Validate and normalize body; returns { ok: true, data } or { ok: false, status, message }. */
+function validateBody(body) {
+    if (!body || typeof body !== 'object') {
+        return { ok: false, status: 400, message: 'Invalid request body' };
+    }
+
+    let totalFromSeats = 0;
+    const row = {
+        Timestamp: new Date().toISOString(),
+        FirstName: sanitizeString(body.FirstName),
+        LastName: sanitizeString(body.LastName),
+        Email: sanitizeString(body.Email),
+        Phone: sanitizeString(body.Phone),
+        Comments: sanitizeString(body.Comments),
+    };
+
+    for (const [key, price] of Object.entries(SEAT_PRICES)) {
+        const qty = parseNum(body[key], 0);
+        row[key] = qty;
+        totalFromSeats += qty * price;
+    }
+
+    const totalFromSeatsRounded = Math.round(totalFromSeats * 100) / 100;
+    const clientTotal = parseFloat(body.Total);
+    if (Number.isNaN(clientTotal) || clientTotal < 0 || Math.abs(clientTotal - totalFromSeatsRounded) > 0.02) {
+        return { ok: false, status: 400, message: 'Total does not match selected seats' };
+    }
+
+    row.Total = totalFromSeatsRounded.toFixed(2);
+    return { ok: true, data: row };
+}
+
 module.exports = async (req, res) => {
-    // Only allow POST requests
     if (req.method !== 'POST') {
         return res.status(405).json({ message: 'Only POST requests are allowed' });
     }
 
-    // --- Task 1: A function to handle logging to Google Sheets ---
+    const validation = validateBody(req.body);
+    if (!validation.ok) {
+        return res.status(validation.status).json({ message: validation.message });
+    }
+    const body = validation.data;
+
+    const sheetId = process.env.GOOGLE_SHEET_ID;
+    const serviceEmail = process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL;
+    const privateKey = process.env.GOOGLE_PRIVATE_KEY;
+    if (!sheetId || !serviceEmail || !privateKey) {
+        console.error('Missing required Google Sheets env (GOOGLE_SHEET_ID, GOOGLE_SERVICE_ACCOUNT_EMAIL, GOOGLE_PRIVATE_KEY).');
+        return res.status(500).json({ message: 'Server configuration error.' });
+    }
+
     const logToGoogleSheets = async () => {
-        const doc = new GoogleSpreadsheet(process.env.GOOGLE_SHEET_ID);
-
+        const doc = new GoogleSpreadsheet(sheetId);
         await doc.useServiceAccountAuth({
-            client_email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
-            private_key: process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, '\n'),
+            client_email: serviceEmail,
+            private_key: privateKey.replace(/\\n/g, '\n'),
         });
-
         await doc.loadInfo();
         const sheet = doc.sheetsByIndex[0];
-        await sheet.addRow(req.body);
+        await sheet.addRow(body);
     };
 
     // --- Task 2: A function to handle logging to the Web3Forms failsafe ---
@@ -28,11 +96,10 @@ module.exports = async (req, res) => {
             return;
         }
 
-        // The data needs to include the access key for Web3Forms
         const payload = {
-            ...req.body, // Include all the original form data
+            ...body,
             access_key: process.env.WEB3FORMS_ACCESS_KEY,
-            subject: 'New Shul Seat Request', // Optional: customize the email subject
+            subject: 'New Shul Seat Request',
         };
 
         // Send the data to Web3Forms
@@ -61,6 +128,7 @@ module.exports = async (req, res) => {
 
         if (results[0].status === 'rejected') {
             console.error('CRITICAL: Google Sheets logging failed!', results[0].reason);
+            return res.status(500).json({ message: 'Failed to record your request. Please try again.' });
         }
 
         res.status(200).json({ message: 'Submission processed' });
