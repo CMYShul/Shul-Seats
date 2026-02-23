@@ -1,5 +1,3 @@
-const { GoogleSpreadsheet } = require('google-spreadsheet');
-
 // Seat type keys and prices (must match client data-price and field names)
 const SEAT_PRICES = {
     RegularMen: 350,
@@ -78,11 +76,14 @@ module.exports = async (req, res) => {
     }
 
     const logToGoogleSheets = async () => {
-        const doc = new GoogleSpreadsheet(sheetId);
-        await doc.useServiceAccountAuth({
-            client_email: serviceEmail,
-            private_key: privateKey.replace(/\\n/g, '\n'),
+        const { GoogleSpreadsheet } = await import('google-spreadsheet');
+        const { JWT } = await import('google-auth-library');
+        const serviceAccountAuth = new JWT({
+            email: serviceEmail,
+            key: privateKey.replace(/\\n/g, '\n'),
+            scopes: ['https://www.googleapis.com/auth/spreadsheets'],
         });
+        const doc = new GoogleSpreadsheet(sheetId, serviceAccountAuth);
         await doc.loadInfo();
         const sheet = doc.sheetsByIndex[0];
         await sheet.addRow(body);
