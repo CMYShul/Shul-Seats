@@ -40,6 +40,10 @@ function validateBody(body) {
         Comments: sanitizeString(body.Comments),
     };
 
+    if (row.Email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(row.Email)) {
+        return { ok: false, status: 400, message: 'Invalid email format' };
+    }
+
     for (const [key, price] of Object.entries(SEAT_PRICES)) {
         const qty = parseNum(body[key], 0);
         row[key] = qty;
@@ -69,6 +73,9 @@ function bodyToRowArray(body) {
 }
 
 module.exports = async (req, res) => {
+    res.setHeader('X-Content-Type-Options', 'nosniff');
+    res.setHeader('X-Frame-Options', 'DENY');
+
     if (req.method !== 'POST') {
         return res.status(405).json({ message: 'Only POST requests are allowed' });
     }
@@ -164,10 +171,8 @@ module.exports = async (req, res) => {
         if (results[0].status === 'rejected') {
             const err = results[0].reason;
             console.error('CRITICAL: Google Sheets logging failed!', err);
-            const detail = err?.message || String(err);
             return res.status(500).json({
                 message: 'Failed to record your request. Please try again.',
-                detail,
             });
         }
 
@@ -175,10 +180,8 @@ module.exports = async (req, res) => {
 
     } catch (error) {
         console.error('A fatal error occurred during the submission process:', error);
-        const detail = error?.message || String(error);
         return res.status(500).json({
             message: 'An unexpected error occurred.',
-            detail,
         });
     }
 };
