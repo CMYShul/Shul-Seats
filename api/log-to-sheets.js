@@ -31,11 +31,17 @@ function validateBody(body) {
     }
 
     let totalFromSeats = 0;
+    const email = sanitizeString(body.Email);
+    // Basic email format validation
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        return { ok: false, status: 400, message: 'Invalid email format' };
+    }
+
     const row = {
         Timestamp: new Date().toISOString(),
         FirstName: sanitizeString(body.FirstName),
         LastName: sanitizeString(body.LastName),
-        Email: sanitizeString(body.Email),
+        Email: email,
         Phone: sanitizeString(body.Phone),
         Comments: sanitizeString(body.Comments),
     };
@@ -69,6 +75,9 @@ function bodyToRowArray(body) {
 }
 
 module.exports = async (req, res) => {
+    res.setHeader('X-Content-Type-Options', 'nosniff');
+    res.setHeader('X-Frame-Options', 'DENY');
+
     if (req.method !== 'POST') {
         return res.status(405).json({ message: 'Only POST requests are allowed' });
     }
@@ -164,10 +173,8 @@ module.exports = async (req, res) => {
         if (results[0].status === 'rejected') {
             const err = results[0].reason;
             console.error('CRITICAL: Google Sheets logging failed!', err);
-            const detail = err?.message || String(err);
             return res.status(500).json({
                 message: 'Failed to record your request. Please try again.',
-                detail,
             });
         }
 
@@ -175,10 +182,8 @@ module.exports = async (req, res) => {
 
     } catch (error) {
         console.error('A fatal error occurred during the submission process:', error);
-        const detail = error?.message || String(error);
         return res.status(500).json({
             message: 'An unexpected error occurred.',
-            detail,
         });
     }
 };
