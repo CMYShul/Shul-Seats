@@ -1,5 +1,8 @@
 // Returns Web3Forms access key for client-side submit (avoids server-side IP whitelisting).
 module.exports = (req, res) => {
+    res.setHeader('X-Content-Type-Options', 'nosniff');
+    res.setHeader('X-Frame-Options', 'DENY');
+
     if (req.method !== 'GET') {
         return res.status(405).json({ message: 'Method not allowed' });
     }

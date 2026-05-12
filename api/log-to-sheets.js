@@ -46,6 +46,10 @@ function validateBody(body) {
         Comments: sanitizeString(body.Comments),
     };
 
+    if (row.Email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(row.Email)) {
+        return { ok: false, status: 400, message: 'Invalid email format' };
+    }
+
     for (const [key, price] of Object.entries(SEAT_PRICES)) {
         const qty = parseNum(body[key], 0);
         row[key] = qty;
