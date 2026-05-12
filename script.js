@@ -21,6 +21,8 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     form.addEventListener('input', calculateTotal);
+
+    // Form submission with loading state
     form.addEventListener('submit', async (event) => {
         event.preventDefault();
         const totalAmount = parseFloat(totalPriceElement.textContent);
@@ -28,6 +30,11 @@ document.addEventListener('DOMContentLoaded', () => {
             alert('Please select at least one seat.');
             return;
         }
+
+        const submitButton = form.querySelector('button[type="submit"]');
+        const originalButtonText = submitButton.textContent;
+        submitButton.disabled = true;
+        submitButton.textContent = 'Recording...';
 
         const formData = {
             Timestamp: new Date().toISOString(),
@@ -54,6 +61,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 body: JSON.stringify(formData),
             });
             const data = await response.json().catch(() => ({}));
+
+            // Re-enable button after response
+            submitButton.disabled = false;
+            submitButton.textContent = originalButtonText;
+
             if (!response.ok) {
                 const msg = data.detail || data.message || 'Failed to log to sheet.';
                 console.error('API error:', response.status, data);
@@ -100,11 +112,41 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
         } catch (error) {
+            // Re-enable button on error
+            submitButton.disabled = false;
+            submitButton.textContent = originalButtonText;
+
             console.error('Submission Error:', error);
             const detail = error?.message || 'There was an error submitting your request. Please try again.';
             alert(detail);
         }
     });
+
+    // Copy to clipboard functionality
+    const copyButton = document.getElementById('copy-email');
+    if (copyButton) {
+        copyButton.addEventListener('click', async () => {
+            const emailEl = document.getElementById('b64');
+            if (!emailEl) return;
+
+            // Clean email for copy (strip spaces if any)
+            const email = emailEl.textContent.trim().replace(/\s+/g, '');
+            try {
+                await navigator.clipboard.writeText(email);
+
+                const originalText = copyButton.textContent;
+                copyButton.textContent = 'Copied!';
+                copyButton.classList.add('copied');
+
+                setTimeout(() => {
+                    copyButton.textContent = originalText;
+                    copyButton.classList.remove('copied');
+                }, 2000);
+            } catch (err) {
+                console.error('Failed to copy text: ', err);
+            }
+        });
+    }
 
     calculateTotal();
 });
