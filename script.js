@@ -149,6 +149,27 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     calculateTotal();
+
+    const copyButton = document.getElementById('copy-email');
+    if (copyButton) {
+        copyButton.addEventListener('click', () => {
+            const emailElement = document.getElementById('b64');
+            if (emailElement) {
+                const email = emailElement.textContent.replace(/\s+/g, '');
+                navigator.clipboard.writeText(email).then(() => {
+                    const originalText = copyButton.textContent;
+                    copyButton.textContent = 'Copied!';
+                    copyButton.classList.add('copied');
+                    setTimeout(() => {
+                        copyButton.textContent = originalText;
+                        copyButton.classList.remove('copied');
+                    }, 2000);
+                }).catch(err => {
+                    console.error('Failed to copy: ', err);
+                });
+            }
+        });
+    }
 });
 
 document.addEventListener('DOMContentLoaded', function () {
