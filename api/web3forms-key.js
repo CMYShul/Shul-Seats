@@ -8,5 +8,7 @@ module.exports = (req, res) => {
     }
     const key = process.env.WEB3FORMS_ACCESS_KEY || '';
     res.setHeader('Cache-Control', 'private, no-cache, no-store, must-revalidate');
+    res.setHeader('X-Content-Type-Options', 'nosniff');
+    res.setHeader('X-Frame-Options', 'DENY');
     return res.status(200).json({ access_key: key ? key : '' });
 };

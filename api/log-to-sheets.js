@@ -31,11 +31,17 @@ function validateBody(body) {
     }
 
     let totalFromSeats = 0;
+    const email = sanitizeString(body.Email);
+    // Basic email format validation
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        return { ok: false, status: 400, message: 'Invalid email format' };
+    }
+
     const row = {
         Timestamp: new Date().toISOString(),
         FirstName: sanitizeString(body.FirstName),
         LastName: sanitizeString(body.LastName),
-        Email: sanitizeString(body.Email),
+        Email: email,
         Phone: sanitizeString(body.Phone),
         Comments: sanitizeString(body.Comments),
     };
