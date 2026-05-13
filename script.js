@@ -14,10 +14,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     clearButton.addEventListener('click', () => {
-  
-        form.reset();
-        
-        calculateTotal();
+        if (confirm('Are you sure you want to clear all fields?')) {
+            form.reset();
+            calculateTotal();
+        }
     });
 
     form.addEventListener('input', calculateTotal);
@@ -148,39 +148,17 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    calculateTotal();
-
-    const copyButton = document.getElementById('copy-email');
-    if (copyButton) {
-        copyButton.addEventListener('click', () => {
-            const emailElement = document.getElementById('b64');
-            if (emailElement) {
-                const email = emailElement.textContent.replace(/\s+/g, '');
-                navigator.clipboard.writeText(email).then(() => {
-                    const originalText = copyButton.textContent;
-                    copyButton.textContent = 'Copied!';
-                    copyButton.classList.add('copied');
-                    setTimeout(() => {
-                        copyButton.textContent = originalText;
-                        copyButton.classList.remove('copied');
-                    }, 2000);
-                }).catch(err => {
-                    console.error('Failed to copy: ', err);
-                });
-            }
-        });
+    // Decode base64 email
+    const emailEl = document.getElementById('b64');
+    if (emailEl) {
+        const b64 = emailEl.getAttribute('data-b64') || '';
+        try {
+            const decoded = atob(b64);
+            emailEl.textContent = decoded;
+        } catch (err) {
+            console.error('Base64 decode failed', err);
+        }
     }
-});
 
-document.addEventListener('DOMContentLoaded', function () {
-  const el = document.getElementById('b64');
-  if (!el) return;
-
-  const b64 = el.getAttribute('data-b64') || '';
-  try {
-    const decoded = atob(b64);
-    el.textContent = decoded;
-  } catch (err) {
-    console.error('Base64 decode failed', err);
-  }
+    calculateTotal();
 });
