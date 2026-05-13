@@ -81,6 +81,9 @@ function bodyToRowArray(body) {
 module.exports = async (req, res) => {
     res.setHeader('X-Content-Type-Options', 'nosniff');
     res.setHeader('X-Frame-Options', 'DENY');
+    res.setHeader('Strict-Transport-Security', 'max-age=63072000; includeSubDomains; preload');
+    res.setHeader('Referrer-Policy', 'no-referrer');
+    res.setHeader('Content-Security-Policy', "default-src 'none'; frame-ancestors 'none';");
 
     if (req.method !== 'POST') {
         return res.status(405).json({ message: 'Only POST requests are allowed' });
@@ -175,8 +178,7 @@ module.exports = async (req, res) => {
         });
 
         if (results[0].status === 'rejected') {
-            const err = results[0].reason;
-            console.error('CRITICAL: Google Sheets logging failed!', err);
+            console.error('CRITICAL: Google Sheets logging failed!');
             return res.status(500).json({
                 message: 'Failed to record your request. Please try again.',
             });

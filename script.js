@@ -67,8 +67,9 @@ document.addEventListener('DOMContentLoaded', () => {
             submitButton.textContent = originalButtonText;
 
             if (!response.ok) {
-                const msg = data.detail || data.message || 'Failed to log to sheet.';
-                console.error('API error:', response.status, data);
+                // Use a generic error message and avoid leaking 'detail' from API
+                const msg = data.message || 'Failed to log to sheet.';
+                console.error('API error:', response.status);
                 throw new Error(msg);
             }
 
@@ -116,9 +117,9 @@ document.addEventListener('DOMContentLoaded', () => {
             submitButton.disabled = false;
             submitButton.textContent = originalButtonText;
 
-            console.error('Submission Error:', error);
-            const detail = error?.message || 'There was an error submitting your request. Please try again.';
-            alert(detail);
+            console.error('Submission Error');
+            const userMessage = error?.message || 'There was an error submitting your request. Please try again.';
+            alert(userMessage);
         }
     });
 
@@ -149,27 +150,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     calculateTotal();
-
-    const copyButton = document.getElementById('copy-email');
-    if (copyButton) {
-        copyButton.addEventListener('click', () => {
-            const emailElement = document.getElementById('b64');
-            if (emailElement) {
-                const email = emailElement.textContent.replace(/\s+/g, '');
-                navigator.clipboard.writeText(email).then(() => {
-                    const originalText = copyButton.textContent;
-                    copyButton.textContent = 'Copied!';
-                    copyButton.classList.add('copied');
-                    setTimeout(() => {
-                        copyButton.textContent = originalText;
-                        copyButton.classList.remove('copied');
-                    }, 2000);
-                }).catch(err => {
-                    console.error('Failed to copy: ', err);
-                });
-            }
-        });
-    }
 });
 
 document.addEventListener('DOMContentLoaded', function () {
