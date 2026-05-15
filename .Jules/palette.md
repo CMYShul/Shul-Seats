@@ -12,3 +12,11 @@
 ## 2025-05-14 - [Copying Obfuscated Content]
 **Learning:** When providing a copy button for obfuscated or human-friendly formatted strings (like emails with spaces to avoid scrapers), always sanitize the string (e.g., `.replace(/\s+/g, '')`) before writing to the clipboard to ensure the resulting value is valid for its intended use.
 **Action:** Sanitize data for clipboard operations to match the expected format of the receiving application.
+
+## 2025-05-15 - [Explicit Focus Indicators]
+**Learning:** Default browser focus outlines can be inconsistent or hard to see. Explicitly defining ':focus-visible' styles with 'outline' and 'outline-offset' ensures that keyboard users can easily navigate the interface and see which element is active.
+**Action:** Always add explicit ':focus-visible' styles for all interactive elements using the project's brand color.
+
+## 2025-05-15 - [Confirmation for Destructive Actions]
+**Learning:** Destructive UI actions, such as "Clear All" on a long form, can lead to accidental data loss and user frustration if triggered by mistake.
+**Action:** Implement a simple confirmation dialog (e.g., 'confirm()') for any action that resets or deletes significant user progress.
