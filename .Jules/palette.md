@@ -12,3 +12,7 @@
 ## 2025-05-14 - [Copying Obfuscated Content]
 **Learning:** When providing a copy button for obfuscated or human-friendly formatted strings (like emails with spaces to avoid scrapers), always sanitize the string (e.g., `.replace(/\s+/g, '')`) before writing to the clipboard to ensure the resulting value is valid for its intended use.
 **Action:** Sanitize data for clipboard operations to match the expected format of the receiving application.
+
+## 2025-05-14 - [Focus Visibility for Accessibility]
+**Learning:** Explicit :focus-visible styles are essential for keyboard users to navigate complex forms effectively, especially when default browser outlines are subtle or inconsistent.
+**Action:** Always define a clear :focus-visible state with a high-contrast outline and outline-offset for all interactive elements.
