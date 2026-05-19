@@ -75,7 +75,14 @@ const ROW_KEYS = [
 ];
 
 function bodyToRowArray(body) {
-    return ROW_KEYS.map((k) => body[k] ?? '');
+    return ROW_KEYS.map((k) => {
+        const val = body[k] ?? '';
+        // Prepend a single quote to prevent CSV injection if the value starts with =, +, -, or @
+        if (typeof val === 'string' && /^[=+\-@]/.test(val)) {
+            return "'" + val;
+        }
+        return val;
+    });
 }
 
 module.exports = async (req, res) => {
