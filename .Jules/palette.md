@@ -12,3 +12,7 @@
 ## 2025-05-14 - [Copying Obfuscated Content]
 **Learning:** When providing a copy button for obfuscated or human-friendly formatted strings (like emails with spaces to avoid scrapers), always sanitize the string (e.g., `.replace(/\s+/g, '')`) before writing to the clipboard to ensure the resulting value is valid for its intended use.
 **Action:** Sanitize data for clipboard operations to match the expected format of the receiving application.
+
+## 2025-05-20 - [Safe Form Resets & Keyboard Navigation]
+**Learning:** Destructive actions like "Clear All" should always have a confirmation prompt to prevent accidental data loss. Explicit `:focus-visible` styles are essential for keyboard users to navigate interactive forms predictably.
+**Action:** Implement `confirm()` for clear/delete actions and define consistent `:focus-visible` outlines for all buttons and inputs.
