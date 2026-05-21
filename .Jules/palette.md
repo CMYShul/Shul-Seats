@@ -12,3 +12,7 @@
 ## 2025-05-14 - [Copying Obfuscated Content]
 **Learning:** When providing a copy button for obfuscated or human-friendly formatted strings (like emails with spaces to avoid scrapers), always sanitize the string (e.g., `.replace(/\s+/g, '')`) before writing to the clipboard to ensure the resulting value is valid for its intended use.
 **Action:** Sanitize data for clipboard operations to match the expected format of the receiving application.
+
+## 2026-05-21 - [Contextual Aria-Live Announcements]
+**Learning:** Placing `aria-live="polite"` on a nested span (e.g., just the price) causes screen readers to only announce the changing number. Placing it on the parent container (e.g., the `h2` containing "Total: $") ensures the entire context is announced, which is much more helpful.
+**Action:** Always place `aria-live` on the parent container of dynamic values to provide full context to screen reader users.
