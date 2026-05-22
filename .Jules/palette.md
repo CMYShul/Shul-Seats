@@ -12,3 +12,7 @@
 ## 2025-05-14 - [Copying Obfuscated Content]
 **Learning:** When providing a copy button for obfuscated or human-friendly formatted strings (like emails with spaces to avoid scrapers), always sanitize the string (e.g., `.replace(/\s+/g, '')`) before writing to the clipboard to ensure the resulting value is valid for its intended use.
 **Action:** Sanitize data for clipboard operations to match the expected format of the receiving application.
+
+## 2025-05-15 - [Confirmation for Destructive Actions]
+**Learning:** Destructive actions like "Clear All" or "Delete" can lead to accidental data loss if triggered unintentionally. Providing a simple confirmation prompt prevents frustration.
+**Action:** Always implement a `confirm()` dialog or a custom modal for buttons that reset or delete user-entered data.
