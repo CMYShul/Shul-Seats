@@ -75,12 +75,24 @@ const ROW_KEYS = [
 ];
 
 function bodyToRowArray(body) {
-    return ROW_KEYS.map((k) => body[k] ?? '');
+    return ROW_KEYS.map((k) => {
+        const val = body[k] ?? '';
+        const s = String(val);
+        // CSV injection protection: prepend ' if value starts with formula characters
+        if (s.length > 0 && ['=', '+', '-', '@', '\t', '\r'].includes(s[0])) {
+            return "'" + s;
+        }
+        return val;
+    });
 }
 
 module.exports = async (req, res) => {
+    // Standard security headers
     res.setHeader('X-Content-Type-Options', 'nosniff');
     res.setHeader('X-Frame-Options', 'DENY');
+    res.setHeader('Strict-Transport-Security', 'max-age=63072000; includeSubDomains; preload');
+    res.setHeader('Referrer-Policy', 'no-referrer');
+    res.setHeader('Content-Security-Policy', "default-src 'none'; frame-ancestors 'none';");
 
     if (req.method !== 'POST') {
         return res.status(405).json({ message: 'Only POST requests are allowed' });

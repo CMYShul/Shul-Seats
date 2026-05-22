@@ -148,39 +148,17 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    calculateTotal();
-
-    const copyButton = document.getElementById('copy-email');
-    if (copyButton) {
-        copyButton.addEventListener('click', () => {
-            const emailElement = document.getElementById('b64');
-            if (emailElement) {
-                const email = emailElement.textContent.replace(/\s+/g, '');
-                navigator.clipboard.writeText(email).then(() => {
-                    const originalText = copyButton.textContent;
-                    copyButton.textContent = 'Copied!';
-                    copyButton.classList.add('copied');
-                    setTimeout(() => {
-                        copyButton.textContent = originalText;
-                        copyButton.classList.remove('copied');
-                    }, 2000);
-                }).catch(err => {
-                    console.error('Failed to copy: ', err);
-                });
-            }
-        });
+    // Decode Base64 email
+    const el = document.getElementById('b64');
+    if (el) {
+        const b64 = el.getAttribute('data-b64') || '';
+        try {
+            const decoded = atob(b64);
+            el.textContent = decoded;
+        } catch (err) {
+            console.error('Base64 decode failed', err);
+        }
     }
-});
 
-document.addEventListener('DOMContentLoaded', function () {
-  const el = document.getElementById('b64');
-  if (!el) return;
-
-  const b64 = el.getAttribute('data-b64') || '';
-  try {
-    const decoded = atob(b64);
-    el.textContent = decoded;
-  } catch (err) {
-    console.error('Base64 decode failed', err);
-  }
+    calculateTotal();
 });
