@@ -2,8 +2,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('seat-form');
     const totalPriceElement = document.getElementById('total-price');
     const seatInputs = form.querySelectorAll('input[type="number"][data-price]');
-    
     const clearButton = document.getElementById('clear-button');
+    const b64Element = document.getElementById('b64');
+    const copyButton = document.getElementById('copy-email');
 
     function calculateTotal() {
         let total = 0;
@@ -13,12 +14,12 @@ document.addEventListener('DOMContentLoaded', () => {
         totalPriceElement.textContent = total.toFixed(2);
     }
 
-    clearButton.addEventListener('click', () => {
-  
-        form.reset();
-        
-        calculateTotal();
-    });
+    if (clearButton) {
+        clearButton.addEventListener('click', () => {
+            form.reset();
+            calculateTotal();
+        });
+    }
 
     form.addEventListener('input', calculateTotal);
 
@@ -106,10 +107,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 message: formData.Comments
             };
 
-            DonorFuseClient.ShowPopup(options, function(success) {
-                if (success) console.log('Donation completed successfully!');
-                else console.log('Donation was cancelled or failed.');
-            });
+            if (typeof DonorFuseClient !== 'undefined') {
+                DonorFuseClient.ShowPopup(options, function(success) {
+                    if (success) console.log('Donation completed successfully!');
+                    else console.log('Donation was cancelled or failed.');
+                });
+            }
 
         } catch (error) {
             // Re-enable button on error
@@ -123,14 +126,12 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Copy to clipboard functionality
-    const copyButton = document.getElementById('copy-email');
     if (copyButton) {
         copyButton.addEventListener('click', async () => {
-            const emailEl = document.getElementById('b64');
-            if (!emailEl) return;
+            if (!b64Element) return;
 
             // Clean email for copy (strip spaces if any)
-            const email = emailEl.textContent.trim().replace(/\s+/g, '');
+            const email = b64Element.textContent.trim().replace(/\s+/g, '');
             try {
                 await navigator.clipboard.writeText(email);
 
@@ -148,39 +149,16 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    calculateTotal();
-
-    const copyButton = document.getElementById('copy-email');
-    if (copyButton) {
-        copyButton.addEventListener('click', () => {
-            const emailElement = document.getElementById('b64');
-            if (emailElement) {
-                const email = emailElement.textContent.replace(/\s+/g, '');
-                navigator.clipboard.writeText(email).then(() => {
-                    const originalText = copyButton.textContent;
-                    copyButton.textContent = 'Copied!';
-                    copyButton.classList.add('copied');
-                    setTimeout(() => {
-                        copyButton.textContent = originalText;
-                        copyButton.classList.remove('copied');
-                    }, 2000);
-                }).catch(err => {
-                    console.error('Failed to copy: ', err);
-                });
-            }
-        });
+    // Base64 decode for email obfuscation
+    if (b64Element) {
+        const b64 = b64Element.getAttribute('data-b64') || '';
+        try {
+            const decoded = atob(b64);
+            b64Element.textContent = decoded;
+        } catch (err) {
+            console.error('Base64 decode failed', err);
+        }
     }
-});
 
-document.addEventListener('DOMContentLoaded', function () {
-  const el = document.getElementById('b64');
-  if (!el) return;
-
-  const b64 = el.getAttribute('data-b64') || '';
-  try {
-    const decoded = atob(b64);
-    el.textContent = decoded;
-  } catch (err) {
-    console.error('Base64 decode failed', err);
-  }
+    calculateTotal();
 });
