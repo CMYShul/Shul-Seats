@@ -64,6 +64,12 @@ textarea {
     box-sizing: border-box; 
 }
 
+input:focus-visible,
+textarea:focus-visible,
+button:focus-visible {
+    outline: 2px solid #007bff;
+    outline-offset: 2px;
+}
 
 input[type="number"] {
     width: 80px;
