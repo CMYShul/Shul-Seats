@@ -185,8 +185,7 @@ module.exports = async (req, res) => {
         });
 
         if (results[0].status === 'rejected') {
-            const err = results[0].reason;
-            console.error('CRITICAL: Google Sheets logging failed!', err);
+            console.error('CRITICAL: Google Sheets logging failed!');
             return res.status(500).json({
                 message: 'Failed to record your request. Please try again.',
             });

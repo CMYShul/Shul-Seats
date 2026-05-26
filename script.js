@@ -75,8 +75,9 @@ document.addEventListener('DOMContentLoaded', () => {
             const data = await response.json().catch(() => ({}));
 
             if (!response.ok) {
-                const msg = data.detail || data.message || 'Failed to log to sheet.';
-                console.error('API error:', response.status, data);
+                // Use a generic error message and avoid leaking 'detail' from API
+                const msg = data.message || 'Failed to log to sheet.';
+                console.error('API error:', response.status);
                 throw new Error(msg);
             }
 
