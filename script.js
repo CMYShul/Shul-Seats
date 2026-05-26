@@ -75,9 +75,9 @@ document.addEventListener('DOMContentLoaded', () => {
             const data = await response.json().catch(() => ({}));
 
             if (!response.ok) {
-                // Use a generic error message and avoid leaking 'detail' from API
+                // Use data.message only, avoid leaking data.detail
                 const msg = data.message || 'Failed to log to sheet.';
-                console.error('API error:', response.status);
+                console.error('API error:', response.status, data);
                 throw new Error(msg);
             }
 
@@ -151,6 +151,9 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
+
+    calculateTotal();
+});
 
     calculateTotal();
 });
