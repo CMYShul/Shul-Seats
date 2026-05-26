@@ -26,10 +26,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     clearButton.addEventListener('click', () => {
-        if (confirm('Are you sure you want to clear all fields?')) {
-            form.reset();
-            calculateTotal();
-        }
+        form.reset();
+        calculateTotal();
     });
 
     form.addEventListener('input', calculateTotal);
