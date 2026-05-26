@@ -2,7 +2,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('seat-form');
     const totalPriceElement = document.getElementById('total-price');
     const seatInputs = form.querySelectorAll('input[type="number"][data-price]');
-    
     const clearButton = document.getElementById('clear-button');
 
     function calculateTotal() {
@@ -13,12 +12,12 @@ document.addEventListener('DOMContentLoaded', () => {
         totalPriceElement.textContent = total.toFixed(2);
     }
 
-    clearButton.addEventListener('click', () => {
-  
-        form.reset();
-        
-        calculateTotal();
-    });
+    if (clearButton) {
+        clearButton.addEventListener('click', () => {
+            form.reset();
+            calculateTotal();
+        });
+    }
 
     form.addEventListener('input', calculateTotal);
 
@@ -67,7 +66,8 @@ document.addEventListener('DOMContentLoaded', () => {
             submitButton.textContent = originalButtonText;
 
             if (!response.ok) {
-                const msg = data.detail || data.message || 'Failed to log to sheet.';
+                // Use data.message only, avoid leaking data.detail
+                const msg = data.message || 'Failed to log to sheet.';
                 console.error('API error:', response.status, data);
                 throw new Error(msg);
             }
@@ -148,39 +148,17 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    calculateTotal();
-
-    const copyButton = document.getElementById('copy-email');
-    if (copyButton) {
-        copyButton.addEventListener('click', () => {
-            const emailElement = document.getElementById('b64');
-            if (emailElement) {
-                const email = emailElement.textContent.replace(/\s+/g, '');
-                navigator.clipboard.writeText(email).then(() => {
-                    const originalText = copyButton.textContent;
-                    copyButton.textContent = 'Copied!';
-                    copyButton.classList.add('copied');
-                    setTimeout(() => {
-                        copyButton.textContent = originalText;
-                        copyButton.classList.remove('copied');
-                    }, 2000);
-                }).catch(err => {
-                    console.error('Failed to copy: ', err);
-                });
-            }
-        });
+    // Decode Zelle email
+    const b64El = document.getElementById('b64');
+    if (b64El) {
+        const b64 = b64El.getAttribute('data-b64') || '';
+        try {
+            const decoded = atob(b64);
+            b64El.textContent = decoded;
+        } catch (err) {
+            console.error('Base64 decode failed', err);
+        }
     }
-});
 
-document.addEventListener('DOMContentLoaded', function () {
-  const el = document.getElementById('b64');
-  if (!el) return;
-
-  const b64 = el.getAttribute('data-b64') || '';
-  try {
-    const decoded = atob(b64);
-    el.textContent = decoded;
-  } catch (err) {
-    console.error('Base64 decode failed', err);
-  }
+    calculateTotal();
 });
