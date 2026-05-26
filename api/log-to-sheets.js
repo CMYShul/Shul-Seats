@@ -82,7 +82,14 @@ const ROW_KEYS = [
 ];
 
 function bodyToRowArray(body) {
-    return ROW_KEYS.map((k) => body[k] ?? '');
+    return ROW_KEYS.map((k) => {
+        const val = body[k] ?? '';
+        // Mitigate CSV injection (formula injection) in Google Sheets
+        if (typeof val === 'string' && /^[=+\-@\t\r]/.test(val)) {
+            return "'" + val;
+        }
+        return val;
+    });
 }
 
 module.exports = async (req, res) => {
@@ -186,8 +193,7 @@ module.exports = async (req, res) => {
         });
 
         if (results[0].status === 'rejected') {
-            const err = results[0].reason;
-            console.error('CRITICAL: Google Sheets logging failed!', err);
+            console.error('CRITICAL: Google Sheets logging failed!');
             return res.status(500).json({
                 message: 'Failed to record your request. Please try again.',
             });
