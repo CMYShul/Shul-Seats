@@ -74,19 +74,16 @@ document.addEventListener('DOMContentLoaded', () => {
             });
             const data = await response.json().catch(() => ({}));
 
-            // Re-enable button after response
-            submitButton.disabled = false;
-            submitButton.textContent = originalButtonText;
-
             if (!response.ok) {
-                const msg = data.detail || data.message || 'Failed to log to sheet.';
-                console.error('API error:', response.status, data);
+                // Use a generic error message and avoid leaking 'detail' from API
+                const msg = data.message || 'Failed to log to sheet.';
+                console.error('API error:', response.status);
                 throw new Error(msg);
             }
 
             console.log('Successfully logged to Google Sheet.');
 
-            // Web3Forms email backup (client-side so it works without server IP whitelisting)
+            // Web3Forms email backup
             fetch('/api/web3forms-key')
                 .then((r) => r.json())
                 .then(({ access_key }) => {
@@ -119,15 +116,16 @@ document.addEventListener('DOMContentLoaded', () => {
             };
 
             DonorFuseClient.ShowPopup(options, function(success) {
+                // Re-enable button after popup interaction
+                submitButton.disabled = false;
+                submitButton.textContent = originalButtonText;
                 if (success) console.log('Donation completed successfully!');
                 else console.log('Donation was cancelled or failed.');
             });
 
         } catch (error) {
-            // Re-enable button on error
             submitButton.disabled = false;
             submitButton.textContent = originalButtonText;
-
             console.error('Submission Error:', error);
             const detail = error?.message || 'There was an error submitting your request. Please try again.';
             alert(detail);
@@ -135,21 +133,15 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Copy to clipboard functionality
-    const copyButton = document.getElementById('copy-email');
     if (copyButton) {
         copyButton.addEventListener('click', async () => {
-            const emailEl = document.getElementById('b64');
             if (!emailEl) return;
-
-            // Clean email for copy (strip spaces if any)
             const email = emailEl.textContent.trim().replace(/\s+/g, '');
             try {
                 await navigator.clipboard.writeText(email);
-
                 const originalText = copyButton.textContent;
                 copyButton.textContent = 'Copied!';
                 copyButton.classList.add('copied');
-
                 setTimeout(() => {
                     copyButton.textContent = originalText;
                     copyButton.classList.remove('copied');

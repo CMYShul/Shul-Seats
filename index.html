@@ -23,7 +23,7 @@
         <h1>קהל מנחת יהודא סטיטשין</h1>
         <h1>Shul Seats 5786</h1>
       <button type="button" id="clear-button" class="clear-button-top" aria-label="Clear all form fields">Clear All</button>
-        <form id="seat-form">
+        <form id="seat-form" method="POST">
             <div class="form-section">
                 <div class="name-fields">
                     <div>
@@ -45,7 +45,7 @@
                          <div>All * fields are required. Please add comments in the below box.</div>
                      </div>
                 <label for="comments">Comments:</label>
-                <textarea id="comments" name="comments" rows="3"></textarea>
+                <textarea id="comments" name="comments" rows="3" placeholder="Any special seating requests or notes..."></textarea>
             </div>
 
             <div class="form-section">
