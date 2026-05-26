@@ -20,8 +20,15 @@ function parseNum(val, defaultVal = 0) {
 
 function sanitizeString(val) {
     if (val == null) return '';
-    const s = String(val).trim();
-    return s.length > MAX_STRING_LENGTH ? s.slice(0, MAX_STRING_LENGTH) : s;
+    let s = String(val).trim();
+    if (s.length > MAX_STRING_LENGTH) {
+        s = s.slice(0, MAX_STRING_LENGTH);
+    }
+    // Prevent CSV Injection (formula injection) by prepending a single quote
+    if (/^[=+\-@]/.test(s)) {
+        s = "'" + s;
+    }
+    return s;
 }
 
 /** Validate and normalize body; returns { ok: true, data } or { ok: false, status, message }. */
@@ -86,9 +93,10 @@ function bodyToRowArray(body) {
 }
 
 module.exports = async (req, res) => {
+    // Security Headers
     res.setHeader('X-Content-Type-Options', 'nosniff');
     res.setHeader('X-Frame-Options', 'DENY');
-    res.setHeader('Strict-Transport-Security', 'max-age=63072000; includeSubDomains; preload');
+    res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
     res.setHeader('Referrer-Policy', 'no-referrer');
     res.setHeader('Content-Security-Policy', "default-src 'none'; frame-ancestors 'none';");
 
@@ -185,8 +193,7 @@ module.exports = async (req, res) => {
         });
 
         if (results[0].status === 'rejected') {
-            const err = results[0].reason;
-            console.error('CRITICAL: Google Sheets logging failed!', err);
+            console.error('CRITICAL: Google Sheets logging failed!');
             return res.status(500).json({
                 message: 'Failed to record your request. Please try again.',
             });
