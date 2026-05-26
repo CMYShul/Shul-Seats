@@ -154,15 +154,5 @@ document.addEventListener('DOMContentLoaded', () => {
     calculateTotal();
 });
 
-document.addEventListener('DOMContentLoaded', function () {
-  const el = document.getElementById('b64');
-  if (!el) return;
-
-  const b64 = el.getAttribute('data-b64') || '';
-  try {
-    const decoded = atob(b64);
-    el.textContent = decoded;
-  } catch (err) {
-    console.error('Base64 decode failed', err);
-  }
+    calculateTotal();
 });
