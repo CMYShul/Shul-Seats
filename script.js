@@ -3,15 +3,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const totalPriceElement = document.getElementById('total-price');
     const seatInputs = form.querySelectorAll('input[type="number"][data-price]');
     const clearButton = document.getElementById('clear-button');
-    const emailEl = document.getElementById('b64');
-    const copyButton = document.getElementById('copy-email');
+    const b64Element = document.getElementById('b64');
 
     // Decode Zelle email
-    if (emailEl) {
-        const b64 = emailEl.getAttribute('data-b64') || '';
+    if (b64Element) {
+        const b64 = b64Element.getAttribute('data-b64') || '';
         try {
-            const decoded = atob(b64);
-            emailEl.textContent = decoded;
+            b64Element.textContent = atob(b64);
         } catch (err) {
             console.error('Base64 decode failed', err);
         }
@@ -25,10 +23,14 @@ document.addEventListener('DOMContentLoaded', () => {
         totalPriceElement.textContent = total.toFixed(2);
     }
 
-    clearButton.addEventListener('click', () => {
-        form.reset();
-        calculateTotal();
-    });
+    if (clearButton) {
+        clearButton.addEventListener('click', () => {
+            if (confirm('Are you sure you want to clear all form fields?')) {
+                form.reset();
+                calculateTotal();
+            }
+        });
+    }
 
     form.addEventListener('input', calculateTotal);
 
@@ -149,9 +151,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
-
-    calculateTotal();
-});
 
     calculateTotal();
 });
