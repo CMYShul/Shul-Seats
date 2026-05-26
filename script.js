@@ -132,28 +132,5 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Copy to clipboard functionality
-    if (copyButton) {
-        copyButton.addEventListener('click', async () => {
-            if (!emailEl) return;
-            const email = emailEl.textContent.trim().replace(/\s+/g, '');
-            try {
-                await navigator.clipboard.writeText(email);
-                const originalText = copyButton.textContent;
-                copyButton.textContent = 'Copied!';
-                copyButton.classList.add('copied');
-                setTimeout(() => {
-                    copyButton.textContent = originalText;
-                    copyButton.classList.remove('copied');
-                }, 2000);
-            } catch (err) {
-                console.error('Failed to copy text: ', err);
-            }
-        });
-    }
-
-    calculateTotal();
-});
-
     calculateTotal();
 });
