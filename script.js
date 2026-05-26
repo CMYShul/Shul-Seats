@@ -2,8 +2,20 @@ document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('seat-form');
     const totalPriceElement = document.getElementById('total-price');
     const seatInputs = form.querySelectorAll('input[type="number"][data-price]');
-    
     const clearButton = document.getElementById('clear-button');
+    const emailEl = document.getElementById('b64');
+    const copyButton = document.getElementById('copy-email');
+
+    // Decode Zelle email
+    if (emailEl) {
+        const b64 = emailEl.getAttribute('data-b64') || '';
+        try {
+            const decoded = atob(b64);
+            emailEl.textContent = decoded;
+        } catch (err) {
+            console.error('Base64 decode failed', err);
+        }
+    }
 
     function calculateTotal() {
         let total = 0;
@@ -14,10 +26,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     clearButton.addEventListener('click', () => {
-  
-        form.reset();
-        
-        calculateTotal();
+        if (confirm('Are you sure you want to clear all fields?')) {
+            form.reset();
+            calculateTotal();
+        }
     });
 
     form.addEventListener('input', calculateTotal);
@@ -62,10 +74,6 @@ document.addEventListener('DOMContentLoaded', () => {
             });
             const data = await response.json().catch(() => ({}));
 
-            // Re-enable button after response
-            submitButton.disabled = false;
-            submitButton.textContent = originalButtonText;
-
             if (!response.ok) {
                 // Use a generic error message and avoid leaking 'detail' from API
                 const msg = data.message || 'Failed to log to sheet.';
@@ -75,7 +83,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             console.log('Successfully logged to Google Sheet.');
 
-            // Web3Forms email backup (client-side so it works without server IP whitelisting)
+            // Web3Forms email backup
             fetch('/api/web3forms-key')
                 .then((r) => r.json())
                 .then(({ access_key }) => {
@@ -108,37 +116,32 @@ document.addEventListener('DOMContentLoaded', () => {
             };
 
             DonorFuseClient.ShowPopup(options, function(success) {
+                // Re-enable button after popup interaction
+                submitButton.disabled = false;
+                submitButton.textContent = originalButtonText;
                 if (success) console.log('Donation completed successfully!');
                 else console.log('Donation was cancelled or failed.');
             });
 
         } catch (error) {
-            // Re-enable button on error
             submitButton.disabled = false;
             submitButton.textContent = originalButtonText;
-
-            console.error('Submission Error');
-            const userMessage = error?.message || 'There was an error submitting your request. Please try again.';
-            alert(userMessage);
+            console.error('Submission Error:', error);
+            const detail = error?.message || 'There was an error submitting your request. Please try again.';
+            alert(detail);
         }
     });
 
     // Copy to clipboard functionality
-    const copyButton = document.getElementById('copy-email');
     if (copyButton) {
         copyButton.addEventListener('click', async () => {
-            const emailEl = document.getElementById('b64');
             if (!emailEl) return;
-
-            // Clean email for copy (strip spaces if any)
             const email = emailEl.textContent.trim().replace(/\s+/g, '');
             try {
                 await navigator.clipboard.writeText(email);
-
                 const originalText = copyButton.textContent;
                 copyButton.textContent = 'Copied!';
                 copyButton.classList.add('copied');
-
                 setTimeout(() => {
                     copyButton.textContent = originalText;
                     copyButton.classList.remove('copied');
@@ -152,15 +155,5 @@ document.addEventListener('DOMContentLoaded', () => {
     calculateTotal();
 });
 
-document.addEventListener('DOMContentLoaded', function () {
-  const el = document.getElementById('b64');
-  if (!el) return;
-
-  const b64 = el.getAttribute('data-b64') || '';
-  try {
-    const decoded = atob(b64);
-    el.textContent = decoded;
-  } catch (err) {
-    console.error('Base64 decode failed', err);
-  }
+    calculateTotal();
 });

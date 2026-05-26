@@ -75,7 +75,14 @@ const ROW_KEYS = [
 ];
 
 function bodyToRowArray(body) {
-    return ROW_KEYS.map((k) => body[k] ?? '');
+    return ROW_KEYS.map((k) => {
+        const val = body[k] ?? '';
+        // Mitigate CSV injection (formula injection) in Google Sheets
+        if (typeof val === 'string' && /^[=+\-@\t\r]/.test(val)) {
+            return "'" + val;
+        }
+        return val;
+    });
 }
 
 module.exports = async (req, res) => {
