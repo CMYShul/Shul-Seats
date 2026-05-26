@@ -12,12 +12,12 @@ document.addEventListener('DOMContentLoaded', () => {
         totalPriceElement.textContent = total.toFixed(2);
     }
 
-    if (clearButton) {
-        clearButton.addEventListener('click', () => {
+    clearButton.addEventListener('click', () => {
+        if (confirm('Are you sure you want to clear all fields?')) {
             form.reset();
             calculateTotal();
-        });
-    }
+        }
+    });
 
     form.addEventListener('input', calculateTotal);
 
@@ -148,17 +148,8 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Decode Zelle email
-    const b64El = document.getElementById('b64');
-    if (b64El) {
-        const b64 = b64El.getAttribute('data-b64') || '';
-        try {
-            const decoded = atob(b64);
-            b64El.textContent = decoded;
-        } catch (err) {
-            console.error('Base64 decode failed', err);
-        }
-    }
+    calculateTotal();
+});
 
     calculateTotal();
 });
