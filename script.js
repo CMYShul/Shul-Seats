@@ -25,14 +25,12 @@ document.addEventListener('DOMContentLoaded', () => {
         totalPriceElement.textContent = total.toFixed(2);
     }
 
-    if (clearButton) {
-        clearButton.addEventListener('click', () => {
-            if (confirm('Are you sure you want to clear all fields?')) {
-                form.reset();
-                calculateTotal();
-            }
-        });
-    }
+    clearButton.addEventListener('click', () => {
+        if (confirm('Are you sure you want to clear all fields?')) {
+            form.reset();
+            calculateTotal();
+        }
+    });
 
     form.addEventListener('input', calculateTotal);
 
@@ -154,4 +152,17 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     calculateTotal();
+});
+
+document.addEventListener('DOMContentLoaded', function () {
+  const el = document.getElementById('b64');
+  if (!el) return;
+
+  const b64 = el.getAttribute('data-b64') || '';
+  try {
+    const decoded = atob(b64);
+    el.textContent = decoded;
+  } catch (err) {
+    console.error('Base64 decode failed', err);
+  }
 });
