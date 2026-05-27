@@ -53,8 +53,9 @@ function validateBody(body) {
         Comments: sanitizeString(body.Comments),
     };
 
-    if (row.Email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(row.Email)) {
-        return { ok: false, status: 400, message: 'Invalid email format' };
+    // Ensure required fields are present (defense-in-depth)
+    if (!row.FirstName || !row.LastName || !row.Phone || !row.Email) {
+        return { ok: false, status: 400, message: 'Missing required fields' };
     }
 
     for (const [key, price] of Object.entries(SEAT_PRICES)) {
@@ -96,7 +97,7 @@ module.exports = async (req, res) => {
     // Security Headers
     res.setHeader('X-Content-Type-Options', 'nosniff');
     res.setHeader('X-Frame-Options', 'DENY');
-    res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
+    res.setHeader('Strict-Transport-Security', 'max-age=63072000; includeSubDomains; preload');
     res.setHeader('Referrer-Policy', 'no-referrer');
     res.setHeader('Content-Security-Policy', "default-src 'none'; frame-ancestors 'none';");
 
