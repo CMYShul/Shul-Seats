@@ -44,6 +44,13 @@ label {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 12px;
+    padding: 4px 8px;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+}
+
+.seat-row:hover {
+    background-color: #f8f9fa;
 }
 
 .seat-row label {
@@ -100,6 +107,10 @@ input[type="number"] {
     background-color: #0056b3;
 }
 
+.donate-button:active {
+    transform: scale(0.98);
+}
+
 .clear-button-top {
     float: right; 
     background: none;
@@ -129,6 +140,12 @@ input[type="number"] {
     color: #555;
 }
 
+#b64 {
+    user-select: all;
+    font-weight: bold;
+    color: #333;
+}
+
 .copy-button {
     padding: 8px 12px;
     font-size: 0.9em;
@@ -147,10 +164,3 @@ input[type="number"] {
     background-color: #28a745;
 }
 
-/* Keyboard Accessibility */
-input:focus-visible,
-textarea:focus-visible,
-button:focus-visible {
-    outline: 2px solid #007bff;
-    outline-offset: 2px;
-}
