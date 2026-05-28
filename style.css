@@ -53,6 +53,12 @@ label {
     background-color: #f8f9fa;
 }
 
+.seat-row.selected {
+    background-color: #e7f3ff;
+    border-left: 4px solid #007bff;
+    padding-left: 4px; /* Adjust padding to account for border */
+}
+
 .seat-row label {
     flex-basis: 70%;
     margin-bottom: 0;
