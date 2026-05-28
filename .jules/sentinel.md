@@ -12,3 +12,8 @@
 **Vulnerability:** Personally Identifiable Information (PII) like names, email, and phone numbers could be leaked in URL parameters if client-side JavaScript failed to intercept form submission (e.g., due to a SyntaxError).
 **Learning:** A duplicate variable declaration (`const copyButton`) in `script.js` was a "silent" failure that could prevent the entire script from loading, causing the form to fall back to a default GET submission.
 **Prevention:** Always explicitly set `method="POST"` on forms containing sensitive data as a defense-in-depth measure. Use `node -c` to verify script syntax and avoid duplicate declarations.
+
+## 2026-05-28 - Bot Mitigation and Resource Exhaustion Prevention
+**Vulnerability:** The booking form was vulnerable to automated spam submissions and potential resource exhaustion (filling up Google Sheets) due to a lack of bot protection and global seat quantity limits.
+**Learning:** Even with per-field limits, a lack of global constraints allows for bulk submissions that can hit API or spreadsheet row limits. A simple honeypot (`middle_name`) is an effective first layer of defense for static sites.
+**Prevention:** Implement honeypot fields for all public-facing forms. Enforce global aggregate limits (e.g., `MAX_TOTAL_SEATS`) in the backend validation, not just per-item limits.
