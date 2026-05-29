@@ -20,3 +20,11 @@
 ## 2025-05-15 - [Mobile Usability and Interactive Feedback]
 **Learning:** Adding 'autocomplete' and 'inputmode="numeric"' significantly reduces friction on mobile devices by minimizing typing errors and providing the correct keyboard context. Subtle visual feedback like ':active' scaling on buttons and hover states on rows makes the interface feel more responsive and "alive".
 **Action:** Always include 'autocomplete', 'inputmode', and 'enterkeyhint' for form fields, and provide tactile feedback for interactive elements.
+
+## 2025-05-16 - [Visual Feedback for Selections]
+**Learning:** In multi-row forms where users select quantities, providing a clear "cart" state by visually highlighting the entire row (e.g., with a background color and border) helps users quickly scan and verify their selections before submitting.
+**Action:** Use a `.selected` class to highlight parent containers when child inputs have values.
+
+## 2025-05-16 - [Numeric Input Focus Behavior]
+**Learning:** For numeric or quantity inputs, users often want to replace the existing value (e.g., changing '0' to '2'). Auto-selecting the text on focus using `setTimeout(() => this.select(), 0)` allows for immediate overwriting, significantly reducing friction on both desktop and mobile.
+**Action:** Implement auto-select on focus for numeric quantity fields.
