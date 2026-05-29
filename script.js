@@ -63,7 +63,8 @@ document.addEventListener('DOMContentLoaded', () => {
             Girls: document.getElementById('girls').value,
             LadiesKleiKodesh: document.getElementById('ladies-klei-kodesh').value,
             GirlsKleiKodesh: document.getElementById('girls-klei-kodesh').value,
-            Total: totalAmount.toFixed(2)
+            Total: totalAmount.toFixed(2),
+            middle_name: document.getElementById('middleName').value
         };
 
         try {
