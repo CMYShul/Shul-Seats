@@ -111,6 +111,16 @@ input[type="number"] {
     transform: scale(0.98);
 }
 
+/* Honeypot field - visually hidden */
+.hp-field {
+    position: absolute;
+    left: -5000px;
+    top: auto;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+}
+
 .clear-button-top {
     float: right; 
     background: none;

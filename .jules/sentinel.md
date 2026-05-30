@@ -12,3 +12,8 @@
 **Vulnerability:** Personally Identifiable Information (PII) like names, email, and phone numbers could be leaked in URL parameters if client-side JavaScript failed to intercept form submission (e.g., due to a SyntaxError).
 **Learning:** A duplicate variable declaration (`const copyButton`) in `script.js` was a "silent" failure that could prevent the entire script from loading, causing the form to fall back to a default GET submission.
 **Prevention:** Always explicitly set `method="POST"` on forms containing sensitive data as a defense-in-depth measure. Use `node -c` to verify script syntax and avoid duplicate declarations.
+
+## 2026-05-14 - Honeypot Visibility and Playwright Verification
+**Vulnerability:** Automated bots can bypass simple hidden fields if they are not correctly implemented to appear invisible to users but visible to bots.
+**Learning:** Playwright's `is_visible()` returns `True` for elements hidden via large negative off-screen positioning (e.g., `left: -5000px`) because they still have a bounding box and are considered part of the layout. Verification must rely on visual inspection or checking bounding box coordinates.
+**Prevention:** Use a combination of `aria-hidden="true"`, `tabindex="-1"`, and off-screen positioning for honeypots. Verify invisibility using screenshots or by asserting that the element's bounding box is outside the viewport.
