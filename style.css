@@ -46,11 +46,17 @@ label {
     margin-bottom: 12px;
     padding: 4px 8px;
     border-radius: 4px;
-    transition: background-color 0.2s;
+    border: 1px solid transparent;
+    transition: background-color 0.2s, border-color 0.2s;
 }
 
 .seat-row:hover {
     background-color: #f8f9fa;
+}
+
+.seat-row.selected {
+    background-color: #e7f3ff;
+    border-color: #007bff;
 }
 
 .seat-row label {
