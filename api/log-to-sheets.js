@@ -12,6 +12,7 @@ const SEAT_PRICES = {
 
 const MAX_STRING_LENGTH = 500;
 const MAX_SEATS_PER_TYPE = 100;
+const MAX_TOTAL_SEATS = 200;
 
 function parseNum(val, defaultVal = 0) {
     const n = parseInt(val, 10);
@@ -37,6 +38,12 @@ function validateBody(body) {
         return { ok: false, status: 400, message: 'Invalid request body' };
     }
 
+    // Honeypot check
+    if (body.middle_name) {
+        console.warn('Honeypot triggered: middle_name field was populated.');
+        return { ok: false, status: 400, message: 'Spam detected' };
+    }
+
     let totalFromSeats = 0;
     const email = sanitizeString(body.Email);
     // Basic email format validation
@@ -58,10 +65,16 @@ function validateBody(body) {
         return { ok: false, status: 400, message: 'Missing required fields' };
     }
 
+    let totalSeatsCount = 0;
     for (const [key, price] of Object.entries(SEAT_PRICES)) {
         const qty = parseNum(body[key], 0);
         row[key] = qty;
         totalFromSeats += qty * price;
+        totalSeatsCount += qty;
+    }
+
+    if (totalSeatsCount > MAX_TOTAL_SEATS) {
+        return { ok: false, status: 400, message: 'Total seats exceed the maximum allowed.' };
     }
 
     const totalFromSeatsRounded = Math.round(totalFromSeats * 100) / 100;
