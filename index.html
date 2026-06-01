@@ -45,42 +45,42 @@
                          <div>All * fields are required. Please add comments in the below box.</div>
                      </div>
                 <label for="comments">Comments:</label>
-                <textarea id="comments" name="comments" rows="3" placeholder="Any special seating requests or notes..."></textarea>
+                <textarea id="comments" name="comments" rows="3" maxlength="500" placeholder="Any special seating requests or notes..."></textarea>
             </div>
 
             <div class="form-section">
                 <h3>Select Seats</h3>
                 <div class="seat-row">
                     <label for="regular-men">Regular Men ($350)</label>
-                    <input type="number" id="regular-men" name="regular-men" min="0" value="0" data-price="350" inputmode="numeric" enterkeyhint="next">
+                    <input type="number" id="regular-men" name="regular-men" min="0" max="100" value="0" data-price="350" inputmode="numeric" enterkeyhint="next">
                 </div>
                 <div class="seat-row">
                     <label for="regular-bucherim">Regular Bucherim ($200)</label>
-                    <input type="number" id="regular-bucherim" name="regular-bucherim" min="0" value="0" data-price="200" inputmode="numeric" enterkeyhint="next">
+                    <input type="number" id="regular-bucherim" name="regular-bucherim" min="0" max="100" value="0" data-price="200" inputmode="numeric" enterkeyhint="next">
                 </div>
                 <div class="seat-row">
                     <label for="klei-kodesh">Klei Kodesh ($225)</label>
-                    <input type="number" id="klei-kodesh" name="klei-kodesh" min="0" value="0" data-price="225" inputmode="numeric" enterkeyhint="next">
+                    <input type="number" id="klei-kodesh" name="klei-kodesh" min="0" max="100" value="0" data-price="225" inputmode="numeric" enterkeyhint="next">
                 </div>
                 <div class="seat-row">
                     <label for="klei-kodesh-bucherim">Klei Kodesh Bucherim ($130)</label>
-                    <input type="number" id="klei-kodesh-bucherim" name="klei-kodesh-bucherim" min="0" value="0" data-price="130" inputmode="numeric" enterkeyhint="next">
+                    <input type="number" id="klei-kodesh-bucherim" name="klei-kodesh-bucherim" min="0" max="100" value="0" data-price="130" inputmode="numeric" enterkeyhint="next">
                 </div>
                 <div class="seat-row">
                     <label for="ladies">Ladies ($250)</label>
-                    <input type="number" id="ladies" name="ladies" min="0" value="0" data-price="250" inputmode="numeric" enterkeyhint="next">
+                    <input type="number" id="ladies" name="ladies" min="0" max="100" value="0" data-price="250" inputmode="numeric" enterkeyhint="next">
                 </div>
                 <div class="seat-row">
                     <label for="girls">Girls ($200)</label>
-                    <input type="number" id="girls" name="girls" min="0" value="0" data-price="200" inputmode="numeric" enterkeyhint="next">
+                    <input type="number" id="girls" name="girls" min="0" max="100" value="0" data-price="200" inputmode="numeric" enterkeyhint="next">
                 </div>
                 <div class="seat-row">
                     <label for="ladies-klei-kodesh">Ladies Klei Kodesh ($175)</label>
-                    <input type="number" id="ladies-klei-kodesh" name="ladies-klei-kodesh" min="0" value="0" data-price="175" inputmode="numeric" enterkeyhint="next">
+                    <input type="number" id="ladies-klei-kodesh" name="ladies-klei-kodesh" min="0" max="100" value="0" data-price="175" inputmode="numeric" enterkeyhint="next">
                 </div>
                 <div class="seat-row">
                     <label for="girls-klei-kodesh">Girls Klei Kodesh ($125)</label>
-                    <input type="number" id="girls-klei-kodesh" name="girls-klei-kodesh" min="0" value="0" data-price="125" inputmode="numeric" enterkeyhint="next">
+                    <input type="number" id="girls-klei-kodesh" name="girls-klei-kodesh" min="0" max="100" value="0" data-price="125" inputmode="numeric" enterkeyhint="next">
                 </div>
             </div>
             

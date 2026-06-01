@@ -18,7 +18,14 @@ document.addEventListener('DOMContentLoaded', () => {
     function calculateTotal() {
         let total = 0;
         seatInputs.forEach(input => {
-            total += (parseInt(input.value) || 0) * parseFloat(input.dataset.price);
+            const qty = parseInt(input.value) || 0;
+            total += qty * parseFloat(input.dataset.price);
+
+            // Highlight selected rows
+            const row = input.closest('.seat-row');
+            if (row) {
+                row.classList.toggle('selected', qty > 0);
+            }
         });
         totalPriceElement.textContent = total.toFixed(2);
     }
@@ -33,6 +40,23 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     form.addEventListener('input', calculateTotal);
+
+    // Make entire row clickable
+    document.querySelectorAll('.seat-row').forEach(row => {
+        row.addEventListener('click', (e) => {
+            if (e.target.tagName !== 'INPUT') {
+                const input = row.querySelector('input');
+                if (input) input.focus();
+            }
+        });
+    });
+
+    // Auto-select numeric inputs on focus
+    seatInputs.forEach(input => {
+        input.addEventListener('focus', function() {
+            setTimeout(() => this.select(), 0);
+        });
+    });
 
     // Form submission with loading state
     form.addEventListener('submit', async (event) => {
