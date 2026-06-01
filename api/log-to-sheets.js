@@ -12,10 +12,14 @@ const SEAT_PRICES = {
 
 const MAX_STRING_LENGTH = 500;
 const MAX_SEATS_PER_TYPE = 100;
+const MAX_TOTAL_SEATS = 200;
 
 function parseNum(val, defaultVal = 0) {
     const n = parseInt(val, 10);
-    return Number.isNaN(n) || n < 0 ? defaultVal : Math.min(n, MAX_SEATS_PER_TYPE);
+    // Explicitly clamp to [0, MAX_SEATS_PER_TYPE] to prevent negative numbers
+    // and resource abuse, falling back to defaultVal if invalid.
+    if (Number.isNaN(n)) return defaultVal;
+    return Math.max(0, Math.min(n, MAX_SEATS_PER_TYPE));
 }
 
 function sanitizeString(val) {
@@ -37,7 +41,14 @@ function validateBody(body) {
         return { ok: false, status: 400, message: 'Invalid request body' };
     }
 
+    // Anti-bot: Honeypot check
+    if (body.middle_name) {
+        console.warn('Honeypot field populated. Potential bot submission blocked.');
+        return { ok: false, status: 400, message: 'Bot detected' };
+    }
+
     let totalFromSeats = 0;
+    let totalSeatsCount = 0;
     const email = sanitizeString(body.Email);
     // Basic email format validation
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
@@ -62,6 +73,13 @@ function validateBody(body) {
         const qty = parseNum(body[key], 0);
         row[key] = qty;
         totalFromSeats += qty * price;
+        totalSeatsCount += qty;
+    }
+
+    // Resource abuse: Limit total seats
+    if (totalSeatsCount > MAX_TOTAL_SEATS) {
+        console.warn(`Total seats ${totalSeatsCount} exceeds limit of ${MAX_TOTAL_SEATS}. Submission blocked.`);
+        return { ok: false, status: 400, message: 'Total seats exceed limit' };
     }
 
     const totalFromSeatsRounded = Math.round(totalFromSeats * 100) / 100;

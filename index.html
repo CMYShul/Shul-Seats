@@ -28,24 +28,29 @@
                 <div class="name-fields">
                     <div>
                         <label for="firstName">* First Name:</label>
-                        <input type="text" id="firstName" name="firstName" autocomplete="given-name" enterkeyhint="next" required>
+                        <input type="text" id="firstName" name="firstName" autocomplete="given-name" enterkeyhint="next" maxlength="500" required>
                     </div>
                     <div>
                         <label for="lastName">* Last Name:</label>
-                        <input type="text" id="lastName" name="lastName" autocomplete="family-name" enterkeyhint="next" required>
+                        <input type="text" id="lastName" name="lastName" autocomplete="family-name" enterkeyhint="next" maxlength="500" required>
                     </div>
                 </div>
 
+                <div class="hp-field-container">
+                    <label for="middleName">Middle Name</label>
+                    <input type="text" id="middleName" name="middle_name" autocomplete="off" tabindex="-1" class="hp-field">
+                </div>
+
                 <label for="email">* Email:</label>
-                <input type="email" id="email" name="email" autocomplete="email" enterkeyhint="next" required>
+                <input type="email" id="email" name="email" autocomplete="email" enterkeyhint="next" maxlength="500" required>
 
                 <label for="phone">* Phone:</label>
-                <input type="tel" id="phone" name="phone" autocomplete="tel" enterkeyhint="next" required>
+                <input type="tel" id="phone" name="phone" autocomplete="tel" enterkeyhint="next" maxlength="500" required>
                      <div>
                          <div>All * fields are required. Please add comments in the below box.</div>
                      </div>
                 <label for="comments">Comments:</label>
-                <textarea id="comments" name="comments" rows="3" placeholder="Any special seating requests or notes..."></textarea>
+                <textarea id="comments" name="comments" rows="3" placeholder="Any special seating requests or notes..." maxlength="500"></textarea>
             </div>
 
             <div class="form-section">
