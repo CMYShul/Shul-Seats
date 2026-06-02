@@ -18,10 +18,34 @@ document.addEventListener('DOMContentLoaded', () => {
     function calculateTotal() {
         let total = 0;
         seatInputs.forEach(input => {
-            total += (parseInt(input.value) || 0) * parseFloat(input.dataset.price);
+            const count = parseInt(input.value) || 0;
+            total += count * parseFloat(input.dataset.price);
+
+            // Toggle 'selected' class on parent row
+            const row = input.closest('.seat-row');
+            if (row) {
+                row.classList.toggle('selected', count > 0);
+            }
         });
         totalPriceElement.textContent = total.toFixed(2);
     }
+
+    // Make seat rows clickable and handle input focus selection
+    seatInputs.forEach(input => {
+        const row = input.closest('.seat-row');
+        if (row) {
+            row.style.cursor = 'pointer';
+            row.addEventListener('click', (e) => {
+                if (e.target !== input) {
+                    input.focus();
+                }
+            });
+        }
+
+        input.addEventListener('focus', function() {
+            setTimeout(() => this.select(), 0);
+        });
+    });
 
     if (clearButton) {
         clearButton.addEventListener('click', () => {
