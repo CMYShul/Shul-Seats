@@ -20,3 +20,7 @@
 ## 2025-05-15 - [Mobile Usability and Interactive Feedback]
 **Learning:** Adding 'autocomplete' and 'inputmode="numeric"' significantly reduces friction on mobile devices by minimizing typing errors and providing the correct keyboard context. Subtle visual feedback like ':active' scaling on buttons and hover states on rows makes the interface feel more responsive and "alive".
 **Action:** Always include 'autocomplete', 'inputmode', and 'enterkeyhint' for form fields, and provide tactile feedback for interactive elements.
+
+## 2025-05-16 - [Post-Action State Synchronization]
+**Learning:** In checkout or booking flows where third-party popups (like DonorFuse) are used, it's critical to reset the form and recalculate totals ONLY after the external process confirms success. This prevents stale data from remaining in the UI and provides clear closure to the user.
+**Action:** Explicitly handle form resets and UI state cleanup in the success callbacks of external service integrations.

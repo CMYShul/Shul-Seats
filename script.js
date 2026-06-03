@@ -18,7 +18,15 @@ document.addEventListener('DOMContentLoaded', () => {
     function calculateTotal() {
         let total = 0;
         seatInputs.forEach(input => {
-            total += (parseInt(input.value) || 0) * parseFloat(input.dataset.price);
+            const qty = parseInt(input.value) || 0;
+            total += qty * parseFloat(input.dataset.price);
+
+            // Toggle selected class on row
+            const row = input.closest('.seat-row');
+            if (row) {
+                if (qty > 0) row.classList.add('selected');
+                else row.classList.remove('selected');
+            }
         });
         totalPriceElement.textContent = total.toFixed(2);
     }
@@ -31,6 +39,24 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
+
+    // Enhance numeric inputs and seat rows
+    seatInputs.forEach(input => {
+        // Auto-select text on focus
+        input.addEventListener('focus', function() {
+            setTimeout(() => this.select(), 0);
+        });
+
+        // Click row to focus input
+        const row = input.closest('.seat-row');
+        if (row) {
+            row.addEventListener('click', (e) => {
+                if (e.target !== input) {
+                    input.focus();
+                }
+            });
+        }
+    });
 
     form.addEventListener('input', calculateTotal);
 
@@ -119,8 +145,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Re-enable button after popup interaction
                 submitButton.disabled = false;
                 submitButton.textContent = originalButtonText;
-                if (success) console.log('Donation completed successfully!');
-                else console.log('Donation was cancelled or failed.');
+                if (success) {
+                    console.log('Donation completed successfully!');
+                    form.reset();
+                    calculateTotal();
+                } else {
+                    console.log('Donation was cancelled or failed.');
+                }
             });
 
         } catch (error) {
