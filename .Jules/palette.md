@@ -20,3 +20,7 @@
 ## 2025-05-15 - [Mobile Usability and Interactive Feedback]
 **Learning:** Adding 'autocomplete' and 'inputmode="numeric"' significantly reduces friction on mobile devices by minimizing typing errors and providing the correct keyboard context. Subtle visual feedback like ':active' scaling on buttons and hover states on rows makes the interface feel more responsive and "alive".
 **Action:** Always include 'autocomplete', 'inputmode', and 'enterkeyhint' for form fields, and provide tactile feedback for interactive elements.
+
+## 2025-05-16 - [Seat Selection Interactivity]
+**Learning:** Increasing hit targets by making entire rows clickable to focus inputs, combined with persistent visual "selected" states, makes selection-heavy forms feel much more robust and easier to navigate on both desktop and touch.
+**Action:** Always look for opportunities to expand interactive areas and provide clear visual persistence for active selections.
