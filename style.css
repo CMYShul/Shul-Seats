@@ -146,6 +146,11 @@ input[type="number"] {
     color: #333;
 }
 
+.hp-field {
+    position: absolute;
+    left: -5000px;
+}
+
 .copy-button {
     padding: 8px 12px;
     font-size: 0.9em;

@@ -51,6 +51,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const formData = {
             Timestamp: new Date().toISOString(),
             FirstName: document.getElementById('firstName').value,
+            MiddleName: document.getElementById('middleName').value,
             LastName: document.getElementById('lastName').value,
             Email: document.getElementById('email').value,
             Phone: document.getElementById('phone').value,
