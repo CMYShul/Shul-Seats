@@ -20,3 +20,7 @@
 ## 2025-05-15 - [Mobile Usability and Interactive Feedback]
 **Learning:** Adding 'autocomplete' and 'inputmode="numeric"' significantly reduces friction on mobile devices by minimizing typing errors and providing the correct keyboard context. Subtle visual feedback like ':active' scaling on buttons and hover states on rows makes the interface feel more responsive and "alive".
 **Action:** Always include 'autocomplete', 'inputmode', and 'enterkeyhint' for form fields, and provide tactile feedback for interactive elements.
+
+## 2026-06-05 - [Interactive Seat Selection States]
+**Learning:** Providing a visual "selected" state for list items (like seat rows) when they have a non-zero value, combined with making the entire row clickable to focus the input, creates a "cart-like" experience that is more intuitive than just updating a total. Auto-selecting text on focus for numeric inputs further reduces friction for quantity updates.
+**Action:** Use .selected classes and row-level click listeners to expand hit targets and provide clear state feedback in selection forms. Implement input.select() on focus for quantity fields.
