@@ -12,10 +12,11 @@ const SEAT_PRICES = {
 
 const MAX_STRING_LENGTH = 500;
 const MAX_SEATS_PER_TYPE = 100;
+const MAX_TOTAL_SEATS = 200;
 
 function parseNum(val, defaultVal = 0) {
     const n = parseInt(val, 10);
-    return Number.isNaN(n) || n < 0 ? defaultVal : Math.min(n, MAX_SEATS_PER_TYPE);
+    return Number.isNaN(n) || n < 0 ? defaultVal : Math.max(0, Math.min(n, MAX_SEATS_PER_TYPE));
 }
 
 function sanitizeString(val) {
@@ -37,7 +38,14 @@ function validateBody(body) {
         return { ok: false, status: 400, message: 'Invalid request body' };
     }
 
+    // Honeypot detection
+    if (body.middleName?.length > 0 || body.MiddleName?.length > 0) {
+        console.warn('Honeypot triggered - bot detected.');
+        return { ok: false, status: 400, message: 'Invalid request' };
+    }
+
     let totalFromSeats = 0;
+    let totalQty = 0;
     const email = sanitizeString(body.Email);
     // Basic email format validation
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
@@ -61,7 +69,16 @@ function validateBody(body) {
     for (const [key, price] of Object.entries(SEAT_PRICES)) {
         const qty = parseNum(body[key], 0);
         row[key] = qty;
+        totalQty += qty;
         totalFromSeats += qty * price;
+    }
+
+    if (totalQty <= 0) {
+        return { ok: false, status: 400, message: 'Please select at least one seat' };
+    }
+
+    if (totalQty > MAX_TOTAL_SEATS) {
+        return { ok: false, status: 400, message: `Maximum total seats allowed is ${MAX_TOTAL_SEATS}` };
     }
 
     const totalFromSeatsRounded = Math.round(totalFromSeats * 100) / 100;
