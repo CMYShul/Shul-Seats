@@ -20,3 +20,7 @@
 ## 2025-05-15 - [Mobile Usability and Interactive Feedback]
 **Learning:** Adding 'autocomplete' and 'inputmode="numeric"' significantly reduces friction on mobile devices by minimizing typing errors and providing the correct keyboard context. Subtle visual feedback like ':active' scaling on buttons and hover states on rows makes the interface feel more responsive and "alive".
 **Action:** Always include 'autocomplete', 'inputmode', and 'enterkeyhint' for form fields, and provide tactile feedback for interactive elements.
+
+## 2025-06-06 - [Selection State and Interactive Hit Targets]
+**Learning:** Providing explicit visual feedback for selection (like a 'selected' class on a row) significantly helps users track their "cart" in a list-based form. Additionally, making the entire row a hit target for focusing the input improves accessibility and ease of use, especially on mobile.
+**Action:** Implement a '.selected' state for list items with active inputs, and ensure large hit targets by making parent containers clickable to focus child inputs.

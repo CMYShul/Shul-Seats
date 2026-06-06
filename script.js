@@ -18,10 +18,39 @@ document.addEventListener('DOMContentLoaded', () => {
     function calculateTotal() {
         let total = 0;
         seatInputs.forEach(input => {
-            total += (parseInt(input.value) || 0) * parseFloat(input.dataset.price);
+            const qty = parseInt(input.value) || 0;
+            total += qty * parseFloat(input.dataset.price);
+
+            // Toggle .selected class on the parent .seat-row
+            const row = input.closest('.seat-row');
+            if (row) {
+                if (qty > 0) {
+                    row.classList.add('selected');
+                } else {
+                    row.classList.remove('selected');
+                }
+            }
         });
         totalPriceElement.textContent = total.toFixed(2);
     }
+
+    // Enhance input efficiency and hit targets
+    seatInputs.forEach(input => {
+        // Auto-select text on focus for easier overwriting
+        input.addEventListener('focus', function() {
+            setTimeout(() => this.select(), 0);
+        });
+
+        // Make the entire .seat-row clickable to focus the input
+        const row = input.closest('.seat-row');
+        if (row) {
+            row.addEventListener('click', (e) => {
+                if (e.target !== input) {
+                    input.focus();
+                }
+            });
+        }
+    });
 
     if (clearButton) {
         clearButton.addEventListener('click', () => {
