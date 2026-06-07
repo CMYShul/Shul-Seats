@@ -12,6 +12,7 @@ const SEAT_PRICES = {
 
 const MAX_STRING_LENGTH = 500;
 const MAX_SEATS_PER_TYPE = 100;
+const MAX_TOTAL_SEATS = 200;
 
 function parseNum(val, defaultVal = 0) {
     const n = parseInt(val, 10);
@@ -38,6 +39,7 @@ function validateBody(body) {
     }
 
     let totalFromSeats = 0;
+    let totalQty = 0;
     const email = sanitizeString(body.Email);
     // Basic email format validation
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
@@ -61,7 +63,12 @@ function validateBody(body) {
     for (const [key, price] of Object.entries(SEAT_PRICES)) {
         const qty = parseNum(body[key], 0);
         row[key] = qty;
+        totalQty += qty;
         totalFromSeats += qty * price;
+    }
+
+    if (totalQty > MAX_TOTAL_SEATS) {
+        return { ok: false, status: 400, message: 'Total number of seats exceeds the limit' };
     }
 
     const totalFromSeatsRounded = Math.round(totalFromSeats * 100) / 100;
@@ -115,6 +122,16 @@ module.exports = async (req, res) => {
     }
     if (!parsedBody || typeof parsedBody !== 'object') {
         return res.status(400).json({ message: 'Missing or invalid request body' });
+    }
+
+    // Honeypot check
+    if ((parsedBody.middleName && parsedBody.middleName.length > 0) ||
+        (parsedBody.MiddleName && parsedBody.MiddleName.length > 0)) {
+        console.warn('Honeypot triggered:', {
+            ip: req.headers['x-forwarded-for'] || req.socket.remoteAddress,
+            middleName: parsedBody.middleName || parsedBody.MiddleName
+        });
+        return res.status(400).json({ message: 'Spam detected' });
     }
 
     const validation = validateBody(parsedBody);
