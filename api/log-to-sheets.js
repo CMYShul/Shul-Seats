@@ -12,10 +12,12 @@ const SEAT_PRICES = {
 
 const MAX_STRING_LENGTH = 500;
 const MAX_SEATS_PER_TYPE = 100;
+const MAX_TOTAL_SEATS = 200;
 
 function parseNum(val, defaultVal = 0) {
     const n = parseInt(val, 10);
-    return Number.isNaN(n) || n < 0 ? defaultVal : Math.min(n, MAX_SEATS_PER_TYPE);
+    // Clamp between 0 and MAX_SEATS_PER_TYPE as a defense-in-depth measure
+    return Number.isNaN(n) ? defaultVal : Math.max(0, Math.min(n, MAX_SEATS_PER_TYPE));
 }
 
 function sanitizeString(val) {
@@ -25,7 +27,8 @@ function sanitizeString(val) {
         s = s.slice(0, MAX_STRING_LENGTH);
     }
     // Prevent CSV Injection (formula injection) by prepending a single quote
-    if (/^[=+\-@]/.test(s)) {
+    // Mitigate if string starts with =, +, -, @, \t (tab), or \r (carriage return)
+    if (/^[=+\-@\t\r]/.test(s)) {
         s = "'" + s;
     }
     return s;
@@ -37,7 +40,14 @@ function validateBody(body) {
         return { ok: false, status: 400, message: 'Invalid request body' };
     }
 
+    // Honeypot check: reject if honeypot field is filled
+    if ((body.middleName && body.middleName.length > 0) || (body.MiddleName && body.MiddleName.length > 0)) {
+        console.warn('Honeypot triggered: Submission rejected.');
+        return { ok: false, status: 400, message: 'Bot detected' };
+    }
+
     let totalFromSeats = 0;
+    let totalSeatCount = 0;
     const email = sanitizeString(body.Email);
     // Basic email format validation
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
@@ -62,6 +72,11 @@ function validateBody(body) {
         const qty = parseNum(body[key], 0);
         row[key] = qty;
         totalFromSeats += qty * price;
+        totalSeatCount += qty;
+    }
+
+    if (totalSeatCount > MAX_TOTAL_SEATS) {
+        return { ok: false, status: 400, message: 'Total seats exceed limit' };
     }
 
     const totalFromSeatsRounded = Math.round(totalFromSeats * 100) / 100;
