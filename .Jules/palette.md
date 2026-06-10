@@ -20,3 +20,7 @@
 ## 2025-05-15 - [Mobile Usability and Interactive Feedback]
 **Learning:** Adding 'autocomplete' and 'inputmode="numeric"' significantly reduces friction on mobile devices by minimizing typing errors and providing the correct keyboard context. Subtle visual feedback like ':active' scaling on buttons and hover states on rows makes the interface feel more responsive and "alive".
 **Action:** Always include 'autocomplete', 'inputmode', and 'enterkeyhint' for form fields, and provide tactile feedback for interactive elements.
+
+## 2026-06-10 - [Interactive Seat Selection and Input Behavior]
+**Learning:** Making the entire row clickable to focus an input significantly increases the hit target and improves accessibility. However, programmatic text selection (`this.select()`) on `type="number"` inputs is inconsistent across browsers and can be tricky to verify in Playwright without simulating real keyboard events.
+**Action:** Use `setTimeout(() => this.select(), 0)` for best-effort auto-selection and verify by simulating keyboard typing in tests.
