@@ -12,10 +12,11 @@ const SEAT_PRICES = {
 
 const MAX_STRING_LENGTH = 500;
 const MAX_SEATS_PER_TYPE = 100;
+const MAX_TOTAL_SEATS = 200;
 
 function parseNum(val, defaultVal = 0) {
     const n = parseInt(val, 10);
-    return Number.isNaN(n) || n < 0 ? defaultVal : Math.min(n, MAX_SEATS_PER_TYPE);
+    return Number.isNaN(n) || n < 0 ? defaultVal : Math.max(0, Math.min(n, MAX_SEATS_PER_TYPE));
 }
 
 function sanitizeString(val) {
@@ -32,12 +33,19 @@ function sanitizeString(val) {
 }
 
 /** Validate and normalize body; returns { ok: true, data } or { ok: false, status, message }. */
-function validateBody(body) {
+function validateBody(body, clientIp) {
     if (!body || typeof body !== 'object') {
         return { ok: false, status: 400, message: 'Invalid request body' };
     }
 
+    // Honeypot check
+    if (body.middleName || body.MiddleName) {
+        console.warn(`Honeypot triggered by IP: ${clientIp}`);
+        return { ok: false, status: 400, message: 'Spam detected' };
+    }
+
     let totalFromSeats = 0;
+    let totalSeatCount = 0;
     const email = sanitizeString(body.Email);
     // Basic email format validation
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
@@ -62,6 +70,11 @@ function validateBody(body) {
         const qty = parseNum(body[key], 0);
         row[key] = qty;
         totalFromSeats += qty * price;
+        totalSeatCount += qty;
+    }
+
+    if (totalSeatCount > MAX_TOTAL_SEATS) {
+        return { ok: false, status: 400, message: `Total seats exceeds limit of ${MAX_TOTAL_SEATS}` };
     }
 
     const totalFromSeatsRounded = Math.round(totalFromSeats * 100) / 100;
@@ -117,7 +130,8 @@ module.exports = async (req, res) => {
         return res.status(400).json({ message: 'Missing or invalid request body' });
     }
 
-    const validation = validateBody(parsedBody);
+    const clientIp = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+    const validation = validateBody(parsedBody, clientIp);
     if (!validation.ok) {
         return res.status(validation.status).json({ message: validation.message });
     }

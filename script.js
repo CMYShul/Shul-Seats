@@ -55,6 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
             Email: document.getElementById('email').value,
             Phone: document.getElementById('phone').value,
             Comments: document.getElementById('comments').value,
+            middleName: document.getElementById('middleName').value,
             RegularMen: document.getElementById('regular-men').value,
             RegularBucherim: document.getElementById('regular-bucherim').value,
             KleiKodesh: document.getElementById('klei-kodesh').value,
