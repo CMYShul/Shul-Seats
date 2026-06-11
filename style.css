@@ -58,6 +58,11 @@ label {
     margin-bottom: 0;
 }
 
+.hp-field {
+    position: absolute;
+    left: -5000px;
+}
+
 input[type="text"],
 input[type="email"],
 input[type="tel"],
