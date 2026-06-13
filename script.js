@@ -4,6 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const seatInputs = form.querySelectorAll('input[type="number"][data-price]');
     const clearButton = document.getElementById('clear-button');
     const b64Element = document.getElementById('b64');
+    const copyButton = document.getElementById('copy-email');
 
     // Decode Zelle email
     if (b64Element) {
@@ -14,6 +15,31 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error('Base64 decode failed', err);
         }
     }
+
+    // Copy Zelle email functionality
+    if (copyButton && b64Element) {
+        copyButton.addEventListener('click', () => {
+            const email = b64Element.textContent.replace(/\s+/g, '');
+            navigator.clipboard.writeText(email).then(() => {
+                const originalText = copyButton.textContent;
+                copyButton.textContent = 'Copied!';
+                copyButton.classList.add('copied');
+                setTimeout(() => {
+                    copyButton.textContent = originalText;
+                    copyButton.classList.remove('copied');
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy email: ', err);
+            });
+        });
+    }
+
+    // Auto-select numeric input content on focus
+    seatInputs.forEach(input => {
+        input.addEventListener('focus', function() {
+            setTimeout(() => this.select(), 0);
+        });
+    });
 
     function calculateTotal() {
         let total = 0;
@@ -119,8 +145,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Re-enable button after popup interaction
                 submitButton.disabled = false;
                 submitButton.textContent = originalButtonText;
-                if (success) console.log('Donation completed successfully!');
-                else console.log('Donation was cancelled or failed.');
+                if (success) {
+                    console.log('Donation completed successfully!');
+                    form.reset();
+                    calculateTotal();
+                } else {
+                    console.log('Donation was cancelled or failed.');
+                }
             });
 
         } catch (error) {
