@@ -12,3 +12,8 @@
 **Vulnerability:** Personally Identifiable Information (PII) like names, email, and phone numbers could be leaked in URL parameters if client-side JavaScript failed to intercept form submission (e.g., due to a SyntaxError).
 **Learning:** A duplicate variable declaration (`const copyButton`) in `script.js` was a "silent" failure that could prevent the entire script from loading, causing the form to fall back to a default GET submission.
 **Prevention:** Always explicitly set `method="POST"` on forms containing sensitive data as a defense-in-depth measure. Use `node -c` to verify script syntax and avoid duplicate declarations.
+
+## 2026-05-14 - Bypassable Security Checks due to Deferred Body Parsing
+**Vulnerability:** Security checks (like honeypot field validation) implemented at the start of an API handler could be bypassed if the request body was sent as a raw JSON string instead of a pre-parsed object.
+**Learning:** The `log-to-sheets` handler supports both pre-parsed `req.body` and manual parsing via `JSON.parse(req.body)`. Placing security checks before the parsing logic meant that for raw string payloads, `req.body.field` would be `undefined`, failing to trigger the validation.
+**Prevention:** Always perform security validations that depend on payload content *after* ensuring the request body has been fully parsed and normalized into an object.
