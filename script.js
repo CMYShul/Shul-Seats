@@ -15,10 +15,23 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    function updateRowSelection(input) {
+        const row = input.closest('.seat-row');
+        if (row) {
+            if ((parseInt(input.value) || 0) > 0) {
+                row.classList.add('selected');
+            } else {
+                row.classList.remove('selected');
+            }
+        }
+    }
+
     function calculateTotal() {
         let total = 0;
         seatInputs.forEach(input => {
-            total += (parseInt(input.value) || 0) * parseFloat(input.dataset.price);
+            const val = parseInt(input.value) || 0;
+            total += val * parseFloat(input.dataset.price);
+            updateRowSelection(input);
         });
         totalPriceElement.textContent = total.toFixed(2);
     }
@@ -33,6 +46,22 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     form.addEventListener('input', calculateTotal);
+
+    // Make entire row clickable and auto-select input on focus
+    seatInputs.forEach(input => {
+        const row = input.closest('.seat-row');
+        if (row) {
+            row.addEventListener('click', (e) => {
+                if (e.target !== input) {
+                    input.focus();
+                }
+            });
+        }
+
+        input.addEventListener('focus', function() {
+            setTimeout(() => this.select(), 0);
+        });
+    });
 
     // Form submission with loading state
     form.addEventListener('submit', async (event) => {
