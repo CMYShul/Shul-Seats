@@ -15,6 +15,25 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // Copy Zelle email functionality
+    const copyButton = document.getElementById('copy-zelle');
+    if (copyButton && b64Element) {
+        copyButton.addEventListener('click', () => {
+            const email = b64Element.textContent.replace(/\s+/g, '');
+            navigator.clipboard.writeText(email).then(() => {
+                const originalText = copyButton.textContent;
+                copyButton.textContent = 'Copied!';
+                copyButton.classList.add('copied');
+                setTimeout(() => {
+                    copyButton.textContent = originalText;
+                    copyButton.classList.remove('copied');
+                }, 2000);
+            }).catch(err => {
+                console.error('Copy failed', err);
+            });
+        });
+    }
+
     function calculateTotal() {
         let total = 0;
         seatInputs.forEach(input => {
