@@ -31,10 +31,17 @@ function sanitizeString(val) {
     return s;
 }
 
-/** Validate and normalize body; returns { ok: true, data } or { ok: false, status, message }. */
-function validateBody(body) {
+/** Validate and normalize body; returns { ok: true, data, isSpam } or { ok: false, status, message }. */
+function validateBody(body, req) {
     if (!body || typeof body !== 'object') {
         return { ok: false, status: 400, message: 'Invalid request body' };
+    }
+
+    // Honeypot check
+    if (body.middleName || body.MiddleName) {
+        const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+        console.warn(`Honeypot triggered from IP: ${ip}. Field: ${body.middleName ? 'middleName' : 'MiddleName'}`);
+        return { ok: true, isSpam: true };
     }
 
     let totalFromSeats = 0;
@@ -71,7 +78,7 @@ function validateBody(body) {
     }
 
     row.Total = totalFromSeatsRounded.toFixed(2);
-    return { ok: true, data: row };
+    return { ok: true, data: row, isSpam: false };
 }
 
 // Column order must match your sheet header row exactly (left to right)
@@ -117,10 +124,16 @@ module.exports = async (req, res) => {
         return res.status(400).json({ message: 'Missing or invalid request body' });
     }
 
-    const validation = validateBody(parsedBody);
+    const validation = validateBody(parsedBody, req);
     if (!validation.ok) {
         return res.status(validation.status).json({ message: validation.message });
     }
+
+    if (validation.isSpam) {
+        // Return 200 OK to the bot but don't process further
+        return res.status(200).json({ message: 'Submission processed' });
+    }
+
     const body = validation.data;
 
     const sheetId = process.env.GOOGLE_SHEET_ID;
