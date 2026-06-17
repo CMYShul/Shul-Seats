@@ -18,7 +18,10 @@ document.addEventListener('DOMContentLoaded', () => {
     function calculateTotal() {
         let total = 0;
         seatInputs.forEach(input => {
-            total += (parseInt(input.value) || 0) * parseFloat(input.dataset.price);
+            const qty = parseInt(input.value) || 0;
+            total += qty * parseFloat(input.dataset.price);
+            const row = input.closest('.seat-row');
+            if (row) row.classList.toggle('selected', qty > 0);
         });
         totalPriceElement.textContent = total.toFixed(2);
     }
@@ -33,6 +36,15 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     form.addEventListener('input', calculateTotal);
+
+    seatInputs.forEach(input => {
+        const row = input.closest('.seat-row');
+        if (row) {
+            row.style.cursor = 'pointer';
+            row.addEventListener('click', e => e.target !== input && input.focus());
+        }
+        input.addEventListener('focus', function() { setTimeout(() => this.select(), 0); });
+    });
 
     // Form submission with loading state
     form.addEventListener('submit', async (event) => {
