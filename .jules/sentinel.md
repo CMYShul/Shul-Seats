@@ -12,3 +12,8 @@
 **Vulnerability:** Personally Identifiable Information (PII) like names, email, and phone numbers could be leaked in URL parameters if client-side JavaScript failed to intercept form submission (e.g., due to a SyntaxError).
 **Learning:** A duplicate variable declaration (`const copyButton`) in `script.js` was a "silent" failure that could prevent the entire script from loading, causing the form to fall back to a default GET submission.
 **Prevention:** Always explicitly set `method="POST"` on forms containing sensitive data as a defense-in-depth measure. Use `node -c` to verify script syntax and avoid duplicate declarations.
+
+## 2026-06-17 - Anti-Bot Honeypot Implementation
+**Vulnerability:** The submission endpoint was vulnerable to automated bot submissions as there were no mechanisms to distinguish between human and machine interactions.
+**Learning:** A simple honeypot (a hidden field that should remain empty) is an effective, low-friction way to catch many basic bots. In this repository, the honeypot must be explicitly included in the client-side `formData` construction in `script.js` to be sent to the serverless function.
+**Prevention:** Always implement at least one layer of anti-bot protection on public-facing submission endpoints. Ensure hidden fields are marked with `aria-hidden="true"` and `tabindex="-1"` to maintain accessibility for legitimate users.
