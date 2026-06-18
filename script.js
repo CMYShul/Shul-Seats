@@ -4,6 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const seatInputs = form.querySelectorAll('input[type="number"][data-price]');
     const clearButton = document.getElementById('clear-button');
     const b64Element = document.getElementById('b64');
+    const copyButton = document.getElementById('copy-email');
 
     // Decode Zelle email
     if (b64Element) {
@@ -13,6 +14,27 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (err) {
             console.error('Base64 decode failed', err);
         }
+    }
+
+    let copyTimeout;
+    if (copyButton && b64Element) {
+        copyButton.addEventListener('click', () => {
+            const email = b64Element.textContent.replace(/\s+/g, '');
+            navigator.clipboard.writeText(email).then(() => {
+                if (copyTimeout) clearTimeout(copyTimeout);
+
+                copyButton.textContent = 'Copied!';
+                copyButton.classList.add('copied');
+
+                copyTimeout = setTimeout(() => {
+                    copyButton.textContent = 'Copy';
+                    copyButton.classList.remove('copied');
+                    copyTimeout = null;
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy!', err);
+            });
+        });
     }
 
     function calculateTotal() {
