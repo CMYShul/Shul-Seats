@@ -32,9 +32,16 @@ function sanitizeString(val) {
 }
 
 /** Validate and normalize body; returns { ok: true, data } or { ok: false, status, message }. */
-function validateBody(body) {
+function validateBody(body, req) {
     if (!body || typeof body !== 'object') {
         return { ok: false, status: 400, message: 'Invalid request body' };
+    }
+
+    // Honeypot check: middleName/MiddleName should be empty
+    if (body.middleName || body.MiddleName) {
+        const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+        console.warn(`Honeypot triggered by IP: ${ip}`);
+        return { ok: false, status: 400, message: 'Spam detected' };
     }
 
     let totalFromSeats = 0;
@@ -117,7 +124,7 @@ module.exports = async (req, res) => {
         return res.status(400).json({ message: 'Missing or invalid request body' });
     }
 
-    const validation = validateBody(parsedBody);
+    const validation = validateBody(parsedBody, req);
     if (!validation.ok) {
         return res.status(validation.status).json({ message: validation.message });
     }

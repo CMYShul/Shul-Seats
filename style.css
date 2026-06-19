@@ -111,6 +111,10 @@ input[type="number"] {
     transform: scale(0.98);
 }
 
+.hp-field {
+    display: none;
+}
+
 .clear-button-top {
     float: right; 
     background: none;
