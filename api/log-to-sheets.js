@@ -31,10 +31,17 @@ function sanitizeString(val) {
     return s;
 }
 
-/** Validate and normalize body; returns { ok: true, data } or { ok: false, status, message }. */
-function validateBody(body) {
+/** Validate and normalize body; returns { ok: true, data, isBot: boolean } or { ok: false, status, message }. */
+function validateBody(body, req) {
     if (!body || typeof body !== 'object') {
         return { ok: false, status: 400, message: 'Invalid request body' };
+    }
+
+    // Honeypot check (case-insensitive for common bot behaviors)
+    if (body.middleName || body.MiddleName) {
+        const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+        console.warn(`Honeypot triggered by bot from IP: ${ip}`);
+        return { ok: true, isBot: true };
     }
 
     let totalFromSeats = 0;
@@ -117,10 +124,15 @@ module.exports = async (req, res) => {
         return res.status(400).json({ message: 'Missing or invalid request body' });
     }
 
-    const validation = validateBody(parsedBody);
+    const validation = validateBody(parsedBody, req);
     if (!validation.ok) {
         return res.status(validation.status).json({ message: validation.message });
     }
+
+    if (validation.isBot) {
+        return res.status(200).json({ message: 'Submission processed' });
+    }
+
     const body = validation.data;
 
     const sheetId = process.env.GOOGLE_SHEET_ID;
