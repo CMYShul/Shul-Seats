@@ -164,3 +164,6 @@ input[type="number"] {
     background-color: #28a745;
 }
 
+.hp-field {
+    display: none;
+}

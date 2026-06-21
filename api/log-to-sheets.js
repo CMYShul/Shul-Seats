@@ -94,6 +94,8 @@ function bodyToRowArray(body) {
 }
 
 module.exports = async (req, res) => {
+    const clientIp = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+
     // Security Headers
     res.setHeader('X-Content-Type-Options', 'nosniff');
     res.setHeader('X-Frame-Options', 'DENY');
@@ -115,6 +117,12 @@ module.exports = async (req, res) => {
     }
     if (!parsedBody || typeof parsedBody !== 'object') {
         return res.status(400).json({ message: 'Missing or invalid request body' });
+    }
+
+    // Honeypot check (ID/name 'middleName')
+    if (parsedBody.middleName || parsedBody.MiddleName) {
+        console.warn(`Honeypot triggered by IP: ${clientIp}`);
+        return res.status(200).json({ message: 'Submission processed' });
     }
 
     const validation = validateBody(parsedBody);
