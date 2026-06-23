@@ -135,6 +135,14 @@ input[type="number"] {
     border-radius: 5px;
 }
 
+.hp-field {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+}
+
 .email-copy-section p {
     margin: 0; 
     color: #555;

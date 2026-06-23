@@ -52,6 +52,7 @@ document.addEventListener('DOMContentLoaded', () => {
             Timestamp: new Date().toISOString(),
             FirstName: document.getElementById('firstName').value,
             LastName: document.getElementById('lastName').value,
+            middleName: document.getElementById('middleName').value,
             Email: document.getElementById('email').value,
             Phone: document.getElementById('phone').value,
             Comments: document.getElementById('comments').value,
