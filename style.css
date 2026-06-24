@@ -164,3 +164,9 @@ input[type="number"] {
     background-color: #28a745;
 }
 
+
+/* Honeypot field styling */
+.hp-field-container {
+    position: absolute;
+    left: -5000px;
+}
