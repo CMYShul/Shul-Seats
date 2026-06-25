@@ -24,6 +24,15 @@ h1, h3 {
     padding-bottom: 20px;
 }
 
+.hp-field {
+    position: absolute;
+    left: -5000px;
+    top: auto;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+}
+
 .name-fields {
     display: flex;
     gap: 20px;
