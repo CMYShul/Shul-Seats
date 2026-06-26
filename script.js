@@ -18,7 +18,15 @@ document.addEventListener('DOMContentLoaded', () => {
     function calculateTotal() {
         let total = 0;
         seatInputs.forEach(input => {
-            total += (parseInt(input.value) || 0) * parseFloat(input.dataset.price);
+            const val = parseInt(input.value) || 0;
+            total += val * parseFloat(input.dataset.price);
+
+            // Toggle selected class on parent row
+            const row = input.closest('.seat-row');
+            if (row) {
+                if (val > 0) row.classList.add('selected');
+                else row.classList.remove('selected');
+            }
         });
         totalPriceElement.textContent = total.toFixed(2);
     }
@@ -129,6 +137,24 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error('Submission Error:', error);
             const detail = error?.message || 'There was an error submitting your request. Please try again.';
             alert(detail);
+        }
+    });
+
+    // Enhanced seat selection interactivity
+    seatInputs.forEach(input => {
+        // Auto-select text on focus
+        input.addEventListener('focus', function() {
+            setTimeout(() => this.select(), 0);
+        });
+
+        // Make the entire row clickable to focus input
+        const row = input.closest('.seat-row');
+        if (row) {
+            row.addEventListener('click', (e) => {
+                if (e.target !== input) {
+                    input.focus();
+                }
+            });
         }
     });
 

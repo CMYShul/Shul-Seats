@@ -44,9 +44,11 @@ label {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 12px;
-    padding: 4px 8px;
+    padding: 3px 7px;
+    border: 1px solid transparent;
     border-radius: 4px;
     transition: background-color 0.2s;
+    cursor: pointer;
 }
 
 .seat-row:hover {
@@ -164,3 +166,8 @@ input[type="number"] {
     background-color: #28a745;
 }
 
+
+.seat-row.selected {
+    background-color: #e9ecef;
+    border-color: #007bff;
+}
