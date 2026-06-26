@@ -32,6 +32,15 @@ h1, h3 {
     flex: 1;
 }
 
+.hp-field {
+    position: absolute;
+    left: -5000px;
+    top: auto;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+}
+
 label {
     font-weight: 600;
     color: #555;
