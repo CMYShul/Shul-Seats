@@ -164,3 +164,8 @@ input[type="number"] {
     background-color: #28a745;
 }
 
+/* Honeypot anti-bot field styling */
+.hp-field {
+    position: absolute;
+    left: -5000px;
+}
