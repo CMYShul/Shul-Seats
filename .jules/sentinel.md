@@ -12,3 +12,8 @@
 **Vulnerability:** Personally Identifiable Information (PII) like names, email, and phone numbers could be leaked in URL parameters if client-side JavaScript failed to intercept form submission (e.g., due to a SyntaxError).
 **Learning:** A duplicate variable declaration (`const copyButton`) in `script.js` was a "silent" failure that could prevent the entire script from loading, causing the form to fall back to a default GET submission.
 **Prevention:** Always explicitly set `method="POST"` on forms containing sensitive data as a defense-in-depth measure. Use `node -c` to verify script syntax and avoid duplicate declarations.
+
+## 2026-05-14 - Honeypot Naming and False Positives
+**Vulnerability:** Ineffective bot detection and risk of blocking legitimate users due to poor honeypot field naming.
+**Learning:** Using common field names like `middleName` for a honeypot can trigger aggressive browser autofill engines, causing legitimate users to unknowingly fill the hidden field and have their submissions rejected.
+**Prevention:** Use non-standard, unique names for honeypot fields (e.g., `hp_field_data`) to minimize false positives while still attracting automated bots.
