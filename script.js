@@ -15,6 +15,28 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // Copy Zelle email functionality
+    const copyZelleBtn = document.getElementById('copy-zelle');
+    let copyTimeout;
+    if (copyZelleBtn && b64Element) {
+        copyZelleBtn.addEventListener('click', () => {
+            const email = b64Element.textContent.replace(/\s+/g, '');
+            navigator.clipboard.writeText(email).then(() => {
+                const originalText = copyZelleBtn.textContent;
+                copyZelleBtn.textContent = 'Copied!';
+                copyZelleBtn.classList.add('copied');
+
+                if (copyTimeout) clearTimeout(copyTimeout);
+                copyTimeout = setTimeout(() => {
+                    copyZelleBtn.textContent = originalText;
+                    copyZelleBtn.classList.remove('copied');
+                }, 2000);
+            }).catch(err => {
+                console.error('Copy failed', err);
+            });
+        });
+    }
+
     function calculateTotal() {
         let total = 0;
         seatInputs.forEach(input => {
