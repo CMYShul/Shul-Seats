@@ -4,6 +4,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const seatInputs = form.querySelectorAll('input[type="number"][data-price]');
     const clearButton = document.getElementById('clear-button');
     const b64Element = document.getElementById('b64');
+    const copyZelleButton = document.getElementById('copy-zelle');
+    let copyTimeout;
 
     // Decode Zelle email
     if (b64Element) {
@@ -33,6 +35,25 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     form.addEventListener('input', calculateTotal);
+
+    if (copyZelleButton && b64Element) {
+        copyZelleButton.addEventListener('click', () => {
+            const email = b64Element.textContent.replace(/\s+/g, '');
+            navigator.clipboard.writeText(email).then(() => {
+                const originalText = copyZelleButton.textContent;
+                copyZelleButton.textContent = 'Copied!';
+                copyZelleButton.classList.add('copied');
+
+                clearTimeout(copyTimeout);
+                copyTimeout = setTimeout(() => {
+                    copyZelleButton.textContent = originalText;
+                    copyZelleButton.classList.remove('copied');
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy text: ', err);
+            });
+        });
+    }
 
     // Form submission with loading state
     form.addEventListener('submit', async (event) => {
