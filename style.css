@@ -140,6 +140,11 @@ input[type="number"] {
     color: #555;
 }
 
+.hp-field {
+    position: absolute;
+    left: -5000px;
+}
+
 #b64 {
     user-select: all;
     font-weight: bold;
