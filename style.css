@@ -164,3 +164,12 @@ input[type="number"] {
     background-color: #28a745;
 }
 
+/* Honeypot field - positioned off-screen to deceive bots while remaining hidden from users */
+.hp-field {
+    position: absolute;
+    left: -5000px;
+    top: auto;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+}
