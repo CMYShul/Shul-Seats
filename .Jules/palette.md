@@ -20,3 +20,7 @@
 ## 2025-05-15 - [Mobile Usability and Interactive Feedback]
 **Learning:** Adding 'autocomplete' and 'inputmode="numeric"' significantly reduces friction on mobile devices by minimizing typing errors and providing the correct keyboard context. Subtle visual feedback like ':active' scaling on buttons and hover states on rows makes the interface feel more responsive and "alive".
 **Action:** Always include 'autocomplete', 'inputmode', and 'enterkeyhint' for form fields, and provide tactile feedback for interactive elements.
+
+## 2026-07-04 - [Robust Feedback State Management]
+**Learning:** Capturing "original" element state (like text or ARIA labels) inside an event listener can lead to state corruption if the event is triggered again before the reset timeout completes (e.g., rapid consecutive clicks).
+**Action:** Capture initial state outside the event listener or check for the "active/feedback" state before updating to ensure the reversion logic remains consistent.
