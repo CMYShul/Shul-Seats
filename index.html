@@ -25,6 +25,11 @@
       <button type="button" id="clear-button" class="clear-button-top" aria-label="Clear all form fields">Clear All</button>
         <form id="seat-form" method="POST">
             <div class="form-section">
+                <!-- Honeypot anti-bot field -->
+                <div class="hp-field" aria-hidden="true">
+                    <label for="hp_field_data">Middle Name (leave blank)</label>
+                    <input type="text" id="hp_field_data" name="hp_field_data" tabindex="-1" autocomplete="off">
+                </div>
                 <div class="name-fields">
                     <div>
                         <label for="firstName">* First Name:</label>

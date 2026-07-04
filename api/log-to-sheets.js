@@ -117,6 +117,13 @@ module.exports = async (req, res) => {
         return res.status(400).json({ message: 'Missing or invalid request body' });
     }
 
+    // Honeypot check (anti-bot). Also check common bot-targeted names for defense-in-depth.
+    if (parsedBody.hp_field_data || parsedBody.middleName || parsedBody.MiddleName) {
+        console.warn('Bot detected (honeypot triggered). IP:', req.headers['x-forwarded-for'] || req.socket.remoteAddress);
+        // Deceptive response to bot
+        return res.status(200).json({ message: 'Submission processed' });
+    }
+
     const validation = validateBody(parsedBody);
     if (!validation.ok) {
         return res.status(validation.status).json({ message: validation.message });
