@@ -94,6 +94,15 @@ function bodyToRowArray(body) {
 }
 
 module.exports = async (req, res) => {
+    // Honeypot anti-bot protection
+    const { hp_field_data, middleName, MiddleName } = req.body || {};
+    if (hp_field_data || middleName || MiddleName) {
+        const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+        console.warn(`Honeypot triggered by IP: ${ip}. Field values:`, { hp_field_data, middleName, MiddleName });
+        // Return deceptive success response
+        return res.status(200).json({ message: 'Submission processed' });
+    }
+
     // Security Headers
     res.setHeader('X-Content-Type-Options', 'nosniff');
     res.setHeader('X-Frame-Options', 'DENY');
