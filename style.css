@@ -164,3 +164,12 @@ input[type="number"] {
     background-color: #28a745;
 }
 
+/* Honeypot field - keep it off-screen and invisible to humans */
+.hp-field {
+    position: absolute;
+    left: -5000px;
+    height: 0;
+    width: 0;
+    overflow: hidden;
+    visibility: hidden;
+}
