@@ -4,6 +4,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const seatInputs = form.querySelectorAll('input[type="number"][data-price]');
     const clearButton = document.getElementById('clear-button');
     const b64Element = document.getElementById('b64');
+    const copyZelleButton = document.getElementById('copy-zelle');
+    let copyTimeout;
 
     // Decode Zelle email
     if (b64Element) {
@@ -21,6 +23,27 @@ document.addEventListener('DOMContentLoaded', () => {
             total += (parseInt(input.value) || 0) * parseFloat(input.dataset.price);
         });
         totalPriceElement.textContent = total.toFixed(2);
+    }
+
+    if (copyZelleButton && b64Element) {
+        copyZelleButton.addEventListener('click', () => {
+            const email = b64Element.textContent.replace(/\s+/g, '');
+            navigator.clipboard.writeText(email).then(() => {
+                const originalText = copyZelleButton.textContent;
+                copyZelleButton.textContent = 'Copied!';
+                copyZelleButton.classList.add('copied');
+                copyZelleButton.setAttribute('aria-label', 'Email copied');
+
+                clearTimeout(copyTimeout);
+                copyTimeout = setTimeout(() => {
+                    copyZelleButton.textContent = originalText;
+                    copyZelleButton.classList.remove('copied');
+                    copyZelleButton.setAttribute('aria-label', 'Copy Zelle email');
+                }, 2000);
+            }).catch(err => {
+                console.error('Copy failed', err);
+            });
+        });
     }
 
     if (clearButton) {
