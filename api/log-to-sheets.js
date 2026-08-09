@@ -11,7 +11,7 @@ const SEAT_PRICES = {
 };
 
 const MAX_STRING_LENGTH = 500;
-const MAX_SEATS_PER_TYPE = 100;
+const MAX_SEATS_PER_TYPE = 12;
 
 function parseNum(val, defaultVal = 0) {
     const n = parseInt(val, 10);
