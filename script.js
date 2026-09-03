@@ -57,12 +57,12 @@ document.addEventListener('DOMContentLoaded', () => {
             Comments: document.getElementById('comments').value,
             RegularMen: document.getElementById('regular-men').value,
             RegularBucherim: document.getElementById('regular-bucherim').value,
-            KleiKodesh: document.getElementById('discount-men').value,
-            KleiKodeshBucherim: document.getElementById('discount-bucherim').value,
+            DiscountMen: document.getElementById('discount-men').value,
+            DiscountBucherim: document.getElementById('discount-bucherim').value,
             Ladies: document.getElementById('ladies').value,
             Girls: document.getElementById('girls').value,
-            LadiesKleiKodesh: document.getElementById('discount-ladies').value,
-            GirlsKleiKodesh: document.getElementById('discount-girls').value,
+            DiscountLadies: document.getElementById('discount-ladies').value,
+            DiscountGirls: document.getElementById('discount-girls').value,
             Total: totalAmount.toFixed(2)
         };
 
