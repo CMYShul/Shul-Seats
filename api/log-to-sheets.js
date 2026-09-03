@@ -1,13 +1,13 @@
 // Seat type keys and prices (must match client data-price and field names)
 const SEAT_PRICES = {
-    RegularMen: 350,
-    RegularBucherim: 200,
-    KleiKodesh: 225,
-    KleiKodeshBucherim: 130,
-    Ladies: 250,
-    Girls: 200,
-    LadiesKleiKodesh: 175,
-    GirlsKleiKodesh: 125,
+    RegularMen: 375,
+    RegularBucherim: 250,
+    KleiKodesh: 250,
+    KleiKodeshBucherim: 140,
+    Ladies: 275,
+    Girls: 225,
+    LadiesKleiKodesh: 180,
+    GirlsKleiKodesh: 130,
 };
 
 const MAX_STRING_LENGTH = 500;

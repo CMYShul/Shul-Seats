@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="he" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -22,76 +22,75 @@
     <div class="container">
         <h1>קהל מנחת יהודא סטיטשין</h1>
         <h1>Shul Seats 5787</h1>
-      <button type="button" id="clear-button" class="clear-button-top" aria-label="Clear all form fields">Clear All</button>
+      <button type="button" id="clear-button" class="clear-button-top" aria-label="נקה את כל שדות הטופס">נקה הכל</button>
         <form id="seat-form" method="POST">
             <div class="form-section">
                 <div class="name-fields">
                     <div>
-                        <label for="firstName">* First Name:</label>
+                        <label for="firstName">* שם פרטי:</label>
                         <input type="text" id="firstName" name="firstName" autocomplete="given-name" enterkeyhint="next" required>
                     </div>
                     <div>
-                        <label for="lastName">* Last Name:</label>
+                        <label for="lastName">* שם משפחה:</label>
                         <input type="text" id="lastName" name="lastName" autocomplete="family-name" enterkeyhint="next" required>
                     </div>
                 </div>
 
-                <label for="email">* Email:</label>
+                <label for="email">* אימייל:</label>
                 <input type="email" id="email" name="email" autocomplete="email" enterkeyhint="next" required>
 
-                <label for="phone">* Phone:</label>
+                <label for="phone">* טלפון:</label>
                 <input type="tel" id="phone" name="phone" autocomplete="tel" enterkeyhint="next" required>
                      <div>
-                         <div>All * fields are required. Please add comments in the below box.</div>
+                         <div>כל השדות המסומנים ב-* הם חובה. אנא הוסיפו הערות בתיבה למטה.</div>
                      </div>
-                <label for="comments">Comments:</label>
-                <textarea id="comments" name="comments" rows="3" placeholder="Any special seating requests or notes..."></textarea>
+                <label for="comments">הערות:</label>
+                <textarea id="comments" name="comments" rows="3" placeholder="הערות או בקשות מיוחדות..."></textarea>
             </div>
 
             <div class="form-section">
-                <h3>Select Seats</h3>
+                <h3>בחירת מקומות</h3>
                 <div class="seat-row">
-                    <label for="regular-men">Regular Men ($350)</label>
-                    <input type="number" id="regular-men" name="regular-men" min="0" value="0" data-price="350" inputmode="numeric" enterkeyhint="next">
+                    <label for="regular-men">גברים ($375)</label>
+                    <input type="number" id="regular-men" name="regular-men" min="0" value="0" data-price="375" inputmode="numeric" enterkeyhint="next">
                 </div>
                 <div class="seat-row">
-                    <label for="regular-bucherim">Regular Bucherim ($200)</label>
-                    <input type="number" id="regular-bucherim" name="regular-bucherim" min="0" value="0" data-price="200" inputmode="numeric" enterkeyhint="next">
+                    <label for="regular-bucherim">בחורים ($250)</label>
+                    <input type="number" id="regular-bucherim" name="regular-bucherim" min="0" value="0" data-price="250" inputmode="numeric" enterkeyhint="next">
                 </div>
                 <div class="seat-row">
-                    <label for="klei-kodesh">Klei Kodesh ($225)</label>
-                    <input type="number" id="klei-kodesh" name="klei-kodesh" min="0" value="0" data-price="225" inputmode="numeric" enterkeyhint="next">
+                    <label for="klei-kodesh">הנחה לגברים ($250)</label>
+                    <input type="number" id="klei-kodesh" name="klei-kodesh" min="0" value="0" data-price="250" inputmode="numeric" enterkeyhint="next">
                 </div>
                 <div class="seat-row">
-                    <label for="klei-kodesh-bucherim">Klei Kodesh Bucherim ($130)</label>
-                    <input type="number" id="klei-kodesh-bucherim" name="klei-kodesh-bucherim" min="0" value="0" data-price="130" inputmode="numeric" enterkeyhint="next">
+                    <label for="klei-kodesh-bucherim">הנחה לבחורים ($140)</label>
+                    <input type="number" id="klei-kodesh-bucherim" name="klei-kodesh-bucherim" min="0" value="0" data-price="140" inputmode="numeric" enterkeyhint="next">
                 </div>
                 <div class="seat-row">
-                    <label for="ladies">Ladies ($250)</label>
-                    <input type="number" id="ladies" name="ladies" min="0" value="0" data-price="250" inputmode="numeric" enterkeyhint="next">
+                    <label for="ladies">נשים ($275)</label>
+                    <input type="number" id="ladies" name="ladies" min="0" value="0" data-price="275" inputmode="numeric" enterkeyhint="next">
                 </div>
                 <div class="seat-row">
-                    <label for="girls">Girls ($200)</label>
-                    <input type="number" id="girls" name="girls" min="0" value="0" data-price="200" inputmode="numeric" enterkeyhint="next">
+                    <label for="girls">בנות ($225)</label>
+                    <input type="number" id="girls" name="girls" min="0" value="0" data-price="225" inputmode="numeric" enterkeyhint="next">
                 </div>
                 <div class="seat-row">
-                    <label for="ladies-klei-kodesh">Ladies Klei Kodesh ($175)</label>
-                    <input type="number" id="ladies-klei-kodesh" name="ladies-klei-kodesh" min="0" value="0" data-price="175" inputmode="numeric" enterkeyhint="next">
+                    <label for="ladies-klei-kodesh">הנחה לנשים ($180)</label>
+                    <input type="number" id="ladies-klei-kodesh" name="ladies-klei-kodesh" min="0" value="0" data-price="180" inputmode="numeric" enterkeyhint="next">
                 </div>
                 <div class="seat-row">
-                    <label for="girls-klei-kodesh">Girls Klei Kodesh ($125)</label>
-                    <input type="number" id="girls-klei-kodesh" name="girls-klei-kodesh" min="0" value="0" data-price="125" inputmode="numeric" enterkeyhint="next">
+                    <label for="girls-klei-kodesh">הנחה לבנות ($130)</label>
+                    <input type="number" id="girls-klei-kodesh" name="girls-klei-kodesh" min="0" value="0" data-price="130" inputmode="numeric" enterkeyhint="next">
                 </div>
             </div>
             
-<div class="total-section">
-                <h2 aria-live="polite">Total: $<span id="total-price">0.00</span></h2>
+            <div class="total-section">
+                <h2 aria-live="polite">סה"כ: $<span id="total-price">0.00</span></h2>
             </div>
-<div class="form-section email-copy-section">
-                <p><strong>FOR ZELLE</strong>, please send to "<span id="b64" data-b64="Y215c2VhdHMgQCBnbWFpbC5jb20=">[protected]</span>". Please enter "Seats 5787" in the Memo.</p>
+            <div class="form-section email-copy-section">
+                <p><strong>עבור ZELLE</strong>, אנא שלחו ל-"<span id="b64" data-b64="Y215c2VhdHMgQCBnbWFpbC5jb20=">[protected]</span>". אנא ציינו "Seats 5787" בהערות.</p>
             </div>
-                <button type="submit" class="donate-button">Record your Seats Request</button>
-            </div>
+            <button type="submit" class="donate-button">רשום את בקשת המקומות שלך</button>
         </form>
     </div>
 
