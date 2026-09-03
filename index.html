@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="he" dir="rtl">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -22,34 +22,34 @@
     <div class="container">
         <h1>קהל מנחת יהודא סטיטשין</h1>
         <h1>Shul Seats 5787</h1>
-      <button type="button" id="clear-button" class="clear-button-top" aria-label="נקה את כל שדות הטופס">נקה הכל</button>
+      <button type="button" id="clear-button" class="clear-button-top" aria-label="Clear all form fields">Clear All</button>
         <form id="seat-form" method="POST">
             <div class="form-section">
                 <div class="name-fields">
                     <div>
-                        <label for="firstName">* שם פרטי:</label>
+                        <label for="firstName">* First Name:</label>
                         <input type="text" id="firstName" name="firstName" autocomplete="given-name" enterkeyhint="next" required>
                     </div>
                     <div>
-                        <label for="lastName">* שם משפחה:</label>
+                        <label for="lastName">* Last Name:</label>
                         <input type="text" id="lastName" name="lastName" autocomplete="family-name" enterkeyhint="next" required>
                     </div>
                 </div>
 
-                <label for="email">* אימייל:</label>
+                <label for="email">* Email:</label>
                 <input type="email" id="email" name="email" autocomplete="email" enterkeyhint="next" required>
 
-                <label for="phone">* טלפון:</label>
+                <label for="phone">* Phone:</label>
                 <input type="tel" id="phone" name="phone" autocomplete="tel" enterkeyhint="next" required>
                      <div>
-                         <div>כל השדות המסומנים ב-* הם חובה. אנא הוסיפו הערות בתיבה למטה.</div>
+                         <div>All * fields are required. Please add comments in the below box.</div>
                      </div>
-                <label for="comments">הערות:</label>
-                <textarea id="comments" name="comments" rows="3" placeholder="הערות או בקשות מיוחדות..."></textarea>
+                <label for="comments">Comments:</label>
+                <textarea id="comments" name="comments" rows="3" placeholder="Any special seating requests or notes..."></textarea>
             </div>
 
-            <div class="form-section">
-                <h3>בחירת מקומות</h3>
+            <div class="form-section" dir="rtl">
+                <h3>Select Seats</h3>
                 <div class="seat-row">
                     <label for="regular-men">גברים ($375)</label>
                     <input type="number" id="regular-men" name="regular-men" min="0" value="0" data-price="375" inputmode="numeric" enterkeyhint="next">
@@ -85,12 +85,12 @@
             </div>
             
             <div class="total-section">
-                <h2 aria-live="polite">סה"כ: $<span id="total-price">0.00</span></h2>
+                <h2 aria-live="polite">Total: $<span id="total-price">0.00</span></h2>
             </div>
             <div class="form-section email-copy-section">
-                <p><strong>עבור ZELLE</strong>, אנא שלחו ל-"<span id="b64" data-b64="Y215c2VhdHMgQCBnbWFpbC5jb20=">[protected]</span>". אנא ציינו "Seats 5787" בהערות.</p>
+                <p><strong>FOR ZELLE</strong>, please send to "<span id="b64" data-b64="Y215c2VhdHMgQCBnbWFpbC5jb20=">[protected]</span>". Please enter "Seats 5787" in the Memo.</p>
             </div>
-            <button type="submit" class="donate-button">רשום את בקשת המקומות שלך</button>
+            <button type="submit" class="donate-button">Record your Seats Request</button>
         </form>
     </div>
 

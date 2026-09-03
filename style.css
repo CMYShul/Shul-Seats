@@ -122,10 +122,6 @@ input[type="number"] {
     margin-top: -15px;
     margin-bottom: 10px;
 }
-
-[dir="rtl"] .clear-button-top {
-    float: left;
-}
 .clear-button-top:hover {
     text-decoration: underline;
 }
