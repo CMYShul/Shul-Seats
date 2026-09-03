@@ -2,12 +2,12 @@
 const SEAT_PRICES = {
     RegularMen: 375,
     RegularBucherim: 250,
-    KleiKodesh: 250,
-    KleiKodeshBucherim: 140,
+    DiscountMen: 250,
+    DiscountBucherim: 140,
     Ladies: 275,
     Girls: 225,
-    LadiesKleiKodesh: 180,
-    GirlsKleiKodesh: 130,
+    DiscountLadies: 180,
+    DiscountGirls: 130,
 };
 
 const MAX_STRING_LENGTH = 500;
@@ -77,8 +77,8 @@ function validateBody(body) {
 // Column order must match your sheet header row exactly (left to right)
 const ROW_KEYS = [
     'Timestamp', 'FirstName', 'LastName',
-    'RegularMen', 'RegularBucherim', 'KleiKodesh', 'KleiKodeshBucherim',
-    'Ladies', 'Girls', 'LadiesKleiKodesh', 'GirlsKleiKodesh',
+    'RegularMen', 'RegularBucherim', 'DiscountMen', 'DiscountBucherim',
+    'Ladies', 'Girls', 'DiscountLadies', 'DiscountGirls',
     'Paid', 'Comments', 'Total', 'Email', 'Phone'
 ];
 
